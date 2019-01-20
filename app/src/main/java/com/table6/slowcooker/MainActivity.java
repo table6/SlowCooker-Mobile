@@ -2,8 +2,10 @@ package com.table6.slowcooker;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,11 +15,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.RadioGroup;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.table6.view.CookTimeDisplayView;
+import com.table6.view.DisplayView;
 import com.table6.view.HelpView;
 import com.table6.view.SettingsView;
 import com.table6.view.TemperatureDisplayView;
@@ -25,21 +31,14 @@ import com.table6.view.TemperatureDisplayView;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private LinearLayout viewsList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_drawer);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -50,25 +49,13 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Button openTempViewBtn = (Button) findViewById(R.id.openTempViewBtn);
-        openTempViewBtn.setOnClickListener(new View.OnClickListener() {
+        viewsList = (LinearLayout) findViewById(R.id.linearLayout);
 
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, TemperatureDisplayView.class));
-            }
+        View cookTimeDisplay = LayoutInflater.from(this).inflate(R.layout.activity_cook_time_display_view, viewsList, true);
+        CookTimeDisplayView cookTimeDisplayView = new CookTimeDisplayView(getApplicationContext(), null);
 
-        });
-
-        Button openCookTimeViewBtn = (Button) findViewById(R.id.openCookTimeViewBtn);
-        openCookTimeViewBtn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, CookTimeDisplayView.class));
-            }
-
-        });
+        View temperatureDisplay = LayoutInflater.from(this).inflate(R.layout.activity_temperature_display_view, viewsList, true);
+        TemperatureDisplayView temperatureDisplayView = new TemperatureDisplayView(getApplicationContext(), null);
 
         ToggleButton secureLidToggleBtn = (ToggleButton) findViewById(R.id.secureLidToggleBtn);
         secureLidToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

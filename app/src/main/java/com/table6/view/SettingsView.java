@@ -2,6 +2,8 @@ package com.table6.view;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.table6.slowcooker.R;
 
