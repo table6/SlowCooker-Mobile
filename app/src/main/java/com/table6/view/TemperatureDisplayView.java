@@ -32,11 +32,12 @@ public class TemperatureDisplayView extends View {
     }
 
     public void setMeasurement(String x) {
-        TextView temperature = (TextView) findViewById(R.id.temperature);
-        temperature.setText(x);
+        TextView measurement = (TextView) findViewById(R.id.measurement);
+        measurement.setText(x);
     }
 
     public String getMeasurement() {
-        return "";
+        TextView measurement = (TextView) findViewById(R.id.measurement);
+        return measurement.getText().toString();
     }
 }
