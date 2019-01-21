@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:checkableBehavior="single">
+        android:id="@+id/group1"
         <item
             android:id="@+id/nav_recipes"
             android:icon="@drawable/ic_local_dining_24px"
@@ -16,23 +18,15 @@
             android:id="@+id/nav_manageSlowCooker"
             android:icon="@drawable/ic_menu_manage"
             android:title="Slow Cooker" />
+    </group>
+
+    <group
+        android:checkableBehavior="single"
+        android:id="@+id/group2"
+        >
         <item
             android:id="@+id/nav_help"
             android:icon="@drawable/ic_help_24px"
             android:title="Help" />
     </group>
-
-    <!--<item android:title="Communicate">-->
-        <!--<menu>-->
-            <!--<item-->
-                <!--android:id="@+id/nav_share"-->
-                <!--android:icon="@drawable/ic_menu_share"-->
-                <!--android:title="Share" />-->
-            <!--<item-->
-                <!--android:id="@+id/nav_send"-->
-                <!--android:icon="@drawable/ic_menu_send"-->
-                <!--android:title="Send" />-->
-        <!--</menu>-->
-    <!--</item>-->
-
 </menu>
