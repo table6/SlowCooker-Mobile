@@ -21,8 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.table6.view.CookTimeDisplayView" />
-        <activity android:name="com.table6.view.TemperatureDisplayView" />
+        <activity android:name="com.table6.view.CookTimeView" />
+        <activity android:name="com.table6.view.TemperatureView" />
         <activity android:name="com.table6.view.DisplayView" />
     </application>
 

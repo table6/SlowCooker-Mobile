@@ -5,8 +5,7 @@ import android.os.Bundle;
 
 import com.table6.slowcooker.R;
 
-public class HelpView extends DisplayView {
-
+public class HelpView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

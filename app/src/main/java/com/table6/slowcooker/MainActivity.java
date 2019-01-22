@@ -2,7 +2,6 @@ package com.table6.slowcooker;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
@@ -17,16 +16,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.table6.view.CookTimeDisplayView;
-import com.table6.view.DisplayView;
+import com.table6.view.CookTimeView;
 import com.table6.view.HelpView;
 import com.table6.view.SettingsView;
-import com.table6.view.TemperatureDisplayView;
+import com.table6.view.TemperatureView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -40,6 +35,15 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -51,11 +55,11 @@ public class MainActivity extends AppCompatActivity
 
         viewsList = (LinearLayout) findViewById(R.id.linearLayout);
 
-        View cookTimeDisplay = LayoutInflater.from(this).inflate(R.layout.activity_cook_time_display_view, viewsList, true);
-        CookTimeDisplayView cookTimeDisplayView = new CookTimeDisplayView(getApplicationContext(), null);
+        View cookTimeDisplay = LayoutInflater.from(this).inflate(R.layout.activity_cook_time_view, viewsList, true);
+        CookTimeView cookTimeDisplayView = new CookTimeView(getApplicationContext(), null);
 
-        View temperatureDisplay = LayoutInflater.from(this).inflate(R.layout.activity_temperature_display_view, viewsList, true);
-        TemperatureDisplayView temperatureDisplayView = new TemperatureDisplayView(getApplicationContext(), null);
+        View temperatureDisplay = LayoutInflater.from(this).inflate(R.layout.activity_temperature_view, viewsList, true);
+        TemperatureView temperatureDisplayView = new TemperatureView(getApplicationContext(), null);
 
         ToggleButton secureLidToggleBtn = (ToggleButton) findViewById(R.id.secureLidToggleBtn);
         secureLidToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
