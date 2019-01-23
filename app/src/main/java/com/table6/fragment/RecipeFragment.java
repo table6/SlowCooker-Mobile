@@ -1,6 +1,5 @@
 package com.table6.fragment;
 
-import android.app.Notification;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,8 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.table6.object.Recipe;
-import com.table6.slowcooker.R;
+import com.table6.activity.R;
 
 /**
  * A simple {@link Fragment} subclass.

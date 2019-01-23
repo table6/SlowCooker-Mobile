@@ -3,12 +3,11 @@ package com.table6.view;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.TextView;
 
-import com.table6.slowcooker.R;
+import com.table6.activity.R;
 
-public class CookTimeView extends View {
+public class CookTimeView extends DisplayView {
 
     public CookTimeView(Context context) {
         super(context);
@@ -20,6 +19,11 @@ public class CookTimeView extends View {
 
     public CookTimeView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+    @Override
+    public void update() {
+        // TODO: update our time as necessary
     }
 
     public String getCookTime() {

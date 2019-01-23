@@ -1,9 +1,9 @@
 package com.table6.view;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
-import com.table6.slowcooker.R;
+import com.table6.activity.R;
 
 public class HelpView extends AppCompatActivity {
     @Override

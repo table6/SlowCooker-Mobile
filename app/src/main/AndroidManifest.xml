@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.table6.slowcooker">
+    package="com.table6.activity">
 
     <application
         android:allowBackup="true"
@@ -16,7 +16,7 @@
         <activity android:name="com.table6.view.HelpView" />
         <activity android:name="com.table6.view.SettingsView" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.table6.activity.MainActivity"
             android:label="@string/title_activity_main_drawer"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -25,9 +25,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.table6.view.CookTimeView" />
-        <activity android:name="com.table6.view.TemperatureView" />
-        <activity android:name="com.table6.view.DisplayView" />
     </application>
 
 </manifest>

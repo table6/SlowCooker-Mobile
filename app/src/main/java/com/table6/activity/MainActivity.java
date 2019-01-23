@@ -1,19 +1,19 @@
-package com.table6.slowcooker;
+package com.table6.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ToggleButton;
@@ -56,10 +56,10 @@ public class MainActivity extends AppCompatActivity
 
         viewsList = (LinearLayout) findViewById(R.id.linearLayout);
 
-        View cookTimeDisplay = LayoutInflater.from(this).inflate(R.layout.activity_cook_time_view, viewsList, true);
+        View cookTimeDisplay = LayoutInflater.from(this).inflate(R.layout.view_cook_time_view, viewsList, true);
         CookTimeView cookTimeDisplayView = new CookTimeView(getApplicationContext(), null);
 
-        View temperatureDisplay = LayoutInflater.from(this).inflate(R.layout.activity_temperature_view, viewsList, true);
+        View temperatureDisplay = LayoutInflater.from(this).inflate(R.layout.view_temperature_view, viewsList, true);
         TemperatureView temperatureDisplayView = new TemperatureView(getApplicationContext(), null);
 
         ToggleButton secureLidToggleBtn = (ToggleButton) findViewById(R.id.secureLidToggleBtn);

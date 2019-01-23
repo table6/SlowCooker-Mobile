@@ -9,13 +9,12 @@ package com.table6.view;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.TextView;
 
-import com.table6.slowcooker.R;
+import com.table6.activity.R;
 
 // TODO: Implement interface to update display views
-public class TemperatureView extends View implements TemperatureModeChangeEvent {
+public class TemperatureView extends DisplayView {
 
     public TemperatureView(Context context) {
         super(context);
@@ -59,17 +58,15 @@ public class TemperatureView extends View implements TemperatureModeChangeEvent 
         return (x - 32) / 1.8;
     }
 
+    @Override
     public void update() {
+        // TODO: Update temperature as necessary
+
         // update temperature
 
         // if the mode has changed, convert the current temperature
 
-            // set the new temperature
-
-    }
-
-    @Override
-    public void onTemperatureModeChange(String mode) {
+        // set the new temperature
 
     }
 }

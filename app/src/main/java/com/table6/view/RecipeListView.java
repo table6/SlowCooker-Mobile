@@ -10,9 +10,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.table6.activity.R;
 import com.table6.fragment.RecipeFragment;
 import com.table6.object.Recipe;
-import com.table6.slowcooker.R;
 
 import java.util.ArrayList;
 
