@@ -6,7 +6,6 @@ import android.os.Bundle;
 import com.table6.slowcooker.R;
 
 public class SettingsView extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

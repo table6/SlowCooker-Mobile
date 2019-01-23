@@ -9,6 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name="com.table6.view.RecipeListView"
+            android:label="@string/title_activity_recipe_list_view"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name="com.table6.view.HelpView" />
         <activity android:name="com.table6.view.SettingsView" />
         <activity
