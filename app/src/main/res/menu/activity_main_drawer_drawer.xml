@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group
+        android:checkableBehavior="single">
+        android:id="@+id/group1"
+        <item
+            android:id="@+id/nav_recipes"
+            android:icon="@drawable/ic_local_dining_24px"
+            android:title="Recipes" />
+        <item
+            android:id="@+id/nav_presets"
+            android:icon="@drawable/ic_assignment_24px"
+            android:title="Presets" />
+        <item
+            android:id="@+id/nav_manageSlowCooker"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Slow Cooker" />
+    </group>
+
+    <group
+        android:checkableBehavior="single"
+        android:id="@+id/group2"
+        >
+        <item
+            android:id="@+id/nav_help"
+            android:icon="@drawable/ic_help_24px"
+            android:title="Help" />
+    </group>
+</menu>
