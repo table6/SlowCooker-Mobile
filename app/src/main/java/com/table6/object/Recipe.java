@@ -2,21 +2,21 @@ package com.table6.object;
 
 public class Recipe {
     private static String title;
-    private static int prepTimeMinutes;
-    private static int cookTimeMinutes;
-    private static int servingSize;
+    private static String prepTime;
+    private static String cookTime;
+    private static String servingSize;
 
     public Recipe () {
         this.title = "Example Recipe";
-        this.prepTimeMinutes = 30;
-        this.cookTimeMinutes = 120;
-        this.servingSize = -1;
+        this.prepTime = "00:30";
+        this.cookTime = "02:00";
+        this.servingSize = "9001";
     }
 
-    public Recipe (String title, int prepTimeMinutes, int cookTimeMinutes, int servingSize) {
+    public Recipe (String title, String prepTimeMinutes, String cookTimeMinutes, String servingSize) {
         this.title = title;
-        this.prepTimeMinutes = prepTimeMinutes;
-        this.cookTimeMinutes = cookTimeMinutes;
+        this.prepTime = prepTimeMinutes;
+        this.cookTime = cookTimeMinutes;
         this.servingSize = servingSize;
     }
 
@@ -24,15 +24,19 @@ public class Recipe {
         return this.title;
     }
 
-    public int getPrepTimeMinutes() {
-        return this.prepTimeMinutes;
+    public void setTitle(String x) {
+        this.title = x;
     }
 
-    public int getCookTimeMinutes() {
-        return this.cookTimeMinutes;
+    public String getPrepTime() {
+        return this.prepTime;
     }
 
-    public int getServingSize() {
+    public String getCookTime() {
+        return this.cookTime;
+    }
+
+    public String getServingSize() {
         return this.servingSize;
     }
 }
