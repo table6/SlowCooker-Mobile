@@ -67,6 +67,14 @@ public class RecipeListView extends AppCompatActivity implements RecipeFragment.
             // Before adding a fragment, make sure there is a container for it.
             FrameLayout frameLayout = new FrameLayout(this);
             frameLayout.setId(containerId);
+
+            frameLayout.setOnClickListener(new FrameLayout.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // TODO: Inflate a detailed recipe view
+                }
+            });
+
             recipeViews.addView(frameLayout);
 
             // Add the fragment to the newly created container.
