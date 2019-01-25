@@ -49,12 +49,12 @@ public class TemperatureView extends DisplayView {
     }
 
     // multiply by 1.8 and add 32
-    public double celciusToFarenheit(double x) {
+    public double celsiusToFahrenheit(double x) {
         return x * 1.8 + 32;
     }
 
     // subtract 32 and divide by 1.8
-    public double farenheitToCelcius(double x) {
+    public double fahrenheitToCelsius(double x) {
         return (x - 32) / 1.8;
     }
 
