@@ -35,9 +35,11 @@ public class RecipeListFragment extends Fragment {
     @SuppressWarnings("unused")
     public static RecipeListFragment newInstance(int columnCount) {
         RecipeListFragment fragment = new RecipeListFragment();
+
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -64,6 +66,9 @@ public class RecipeListFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
+
+            RecipeContent.getUserSavedRecipes(context);
+
             recyclerView.setAdapter(new MyRecipeListRecyclerViewAdapter(RecipeContent.ITEMS, mListener));
         }
         return view;
@@ -73,6 +78,7 @@ public class RecipeListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
         } else {
@@ -85,6 +91,8 @@ public class RecipeListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+
+        RecipeContent.setUserSavedRecipes(getActivity().getApplicationContext());
     }
 
     /**

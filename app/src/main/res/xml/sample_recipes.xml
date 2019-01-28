@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<entry>
+    <title type="text">Chili</title>
+    <prepTime type="text">00:15</prepTime>
+    <cookTime type="text">08:00</cookTime>
+    <servingSize type="text">8</servingSize>
+</entry>
+
+<entry>
+    <title type="text">Chicken Barbecue Potatoes</title>
+    <prepTime type="text">00:10</prepTime>
+    <cookTime type="text">04:00</cookTime>
+    <servingSize type="text">6</servingSize>
+</entry>
+
+<entry>
+    <title type="text">Beef Stew</title>
+    <prepTime type="text">00:30</prepTime>
+    <cookTime type="text">04:00</cookTime>
+    <servingSize type="text">6</servingSize>
+</entry>
+
+<entry>
+    <title type="text">Steel-cut Oats</title>
+    <prepTime type="text">00:15</prepTime>
+    <cookTime type="text">06:00</cookTime>
+    <servingSize type="text">6</servingSize>
+</entry>
