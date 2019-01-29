@@ -1,14 +1,19 @@
 package com.table6.fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.table6.activity.R;
+import com.table6.object.RecipeContent;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,14 +24,11 @@ import com.table6.activity.R;
  * create an instance of this fragment.
  */
 public class RecipeAddFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private TextInputEditText titleInput;
+    private TextInputEditText prepTimeInput;
+    private TextInputEditText cookTimeInput;
+    private TextInputEditText servingSizeInput;
 
     private OnFragmentInteractionListener mListener;
 
@@ -50,12 +52,47 @@ public class RecipeAddFragment extends Fragment {
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        titleInput = (TextInputEditText) view.findViewById(R.id.titleTextInput);
+        prepTimeInput = (TextInputEditText) view.findViewById(R.id.prepTimeTextInput);
+        cookTimeInput = (TextInputEditText) view.findViewById(R.id.cookTimeTextInput);
+        servingSizeInput = (TextInputEditText) view.findViewById(R.id.servingSizeTextInput);
+
+        Button addNewRecipeBtn = (Button) view.findViewById(R.id.addNewRecipeBtn);
+        addNewRecipeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create recipe object and pass back to listener
+                String title = titleInput.getText().toString();
+                String prepTime = prepTimeInput.getText().toString();
+                String cookTime = cookTimeInput.getText().toString();
+                String servingSize = servingSizeInput.getText().toString();
+                RecipeContent.Recipe recipe = new RecipeContent.Recipe(title, prepTime, cookTime, servingSize);
+
+                if (title.isEmpty()) {
+                    Toast.makeText(getActivity(), "Title cannot be empty", Toast.LENGTH_LONG ).show();
+                }
+                else if (RecipeContent.ITEMS.contains(recipe)) {
+                    Toast.makeText(getActivity(), "A recipe with that title already exists", Toast.LENGTH_LONG ).show();
+                }
+                else {
+                    mListener.onRecipeAddFragmentInteraction(recipe);
+                    Toast.makeText(getActivity(), recipe.title + " added to recipe list", Toast.LENGTH_LONG ).show();
+
+                    getActivity().getSupportFragmentManager().popBackStack();
+
+                }
+            }
+        });
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+//        if (getArguments() != null) {
+//        }
     }
 
     @Override
@@ -63,13 +100,6 @@ public class RecipeAddFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_recipe_add, container, false);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onRecipeAddFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -101,6 +131,6 @@ public class RecipeAddFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onRecipeAddFragmentInteraction(Uri uri);
+        void onRecipeAddFragmentInteraction(RecipeContent.Recipe recipe);
     }
 }

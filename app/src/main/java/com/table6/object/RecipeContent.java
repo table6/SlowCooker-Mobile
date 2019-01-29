@@ -2,6 +2,7 @@ package com.table6.object;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.util.Xml;
 
 import com.table6.utility.RecipeXmlParser;
@@ -120,6 +121,11 @@ public class RecipeContent extends Application {
             this.prepTime = prepTime;
             this.cookTime = cookTime;
             this.servingSize = servingSize;
+        }
+
+        @Override
+        public boolean equals(@Nullable Object obj) {
+            return ((Recipe)obj).title == this.title;
         }
     }
 }
