@@ -42,12 +42,12 @@ public class RecipeContent extends Application {
 
         }
 
-        if (parsedList == null) {
-            addItem(new Recipe());
-        } else {
+        if (parsedList != null) {
             for (Recipe r : parsedList) {
                 addItem(r);
             }
+        } else if (ITEMS.isEmpty()) {
+            addItem(new Recipe());
         }
     }
 
