@@ -109,6 +109,20 @@ public class RecipeContent extends Application {
         ITEM_MAP.put(item.title, item);
     }
 
+    public static boolean removeItem(String recipeTitle) {
+        if (ITEM_MAP.containsKey(recipeTitle)) {
+            removeItem(ITEM_MAP.get(recipeTitle));
+            return true;
+        }
+
+        return false;
+    }
+
+    private static void removeItem(Recipe recipe) {
+        ITEMS.remove(recipe);
+        ITEM_MAP.remove(recipe.title);
+    }
+
     public static class Recipe {
         public final String title;
         public final String prepTime;

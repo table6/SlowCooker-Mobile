@@ -73,8 +73,9 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListF
     }
 
     @Override
-    public void onRecipeDetailFragmentInteraction() {
-
+    public void onRecipeDetailFragmentInteraction(String recipeTitle) {
+        RecipeContent.removeItem(recipeTitle);
+        RecipeContent.setUserSavedRecipes(getApplicationContext());
     }
 
     @Override

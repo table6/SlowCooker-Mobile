@@ -82,7 +82,6 @@ public class RecipeAddFragment extends Fragment {
                     Toast.makeText(getActivity(), recipe.title + " added to recipe list", Toast.LENGTH_LONG ).show();
 
                     getActivity().getSupportFragmentManager().popBackStack();
-
                 }
             }
         });

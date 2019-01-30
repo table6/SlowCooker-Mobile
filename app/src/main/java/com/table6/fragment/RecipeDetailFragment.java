@@ -8,7 +8,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.table6.activity.R;
 import com.table6.object.RecipeContent;
@@ -89,7 +91,6 @@ public class RecipeDetailFragment extends Fragment {
         TextView recipeTitleTxt = (TextView) view.findViewById(R.id.recipeDetailTitle);
         recipeTitleTxt.setText(this.title);
 
-        // Breaks here because there are several of these.
         TextView recipeServingSizeTxt = (TextView) view.findViewById(R.id.recipeDetailServingSize);
         recipeServingSizeTxt.setText(this.servingSize);
 
@@ -99,12 +100,18 @@ public class RecipeDetailFragment extends Fragment {
         TextView recipeCookTimeTxt = (TextView) view.findViewById(R.id.recipeDetailCookTime);
         recipeCookTimeTxt.setText(this.cookTime);
 
-//        Button recipeRemoveBtn = (Button) view.findViewById(R.id.recipeDetailRemoveBtn);
-//        recipeRemoveBtn.setOnClickListener(new OnFragmentInteractionListener());
-    }
+        final String recipeTitle = this.title;
 
-    public void onRecipeDetailFragmentInteraction(RecipeContent.Recipe recipe) {
-        mListener.onRecipeDetailFragmentInteraction(recipe);
+        Button recipeRemoveBtn = (Button) view.findViewById(R.id.recipeDetailRemoveBtn);
+        recipeRemoveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                TextView recipeTitleTxt = (TextView) v.findViewById(R.id.recipeDetailTitle);
+                Toast.makeText(getActivity(), recipeTitle + " deleted from recipe list", Toast.LENGTH_LONG ).show();
+                mListener.onRecipeDetailFragmentInteraction(recipeTitle);
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
     }
 
     @Override
@@ -136,6 +143,6 @@ public class RecipeDetailFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onRecipeDetailFragmentInteraction(RecipeContent.Recipe recipe);
+        void onRecipeDetailFragmentInteraction(String recipeTitleToRemove);
     }
 }
