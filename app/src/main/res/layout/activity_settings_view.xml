@@ -30,13 +30,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Farenheit" />
+            android:text="Fahrenheit" />
 
         <RadioButton
             android:id="@+id/cBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Celcius" />
+            android:text="Celsius" />
     </RadioGroup>
 </LinearLayout>

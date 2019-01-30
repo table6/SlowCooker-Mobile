@@ -20,7 +20,6 @@ import android.widget.ToggleButton;
 
 import com.table6.view.CookTimeView;
 import com.table6.view.HelpView;
-import com.table6.view.RecipeListView;
 import com.table6.view.SettingsView;
 import com.table6.view.TemperatureView;
 
@@ -116,7 +115,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_recipes) {
-            startActivity(new Intent(MainActivity.this, RecipeListView.class));
+            startActivity(new Intent(MainActivity.this, RecipeListActivity.class));
         } else if (id == R.id.nav_presets) {
 
         } else if (id == R.id.nav_manageSlowCooker) {
