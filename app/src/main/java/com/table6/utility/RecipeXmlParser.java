@@ -33,7 +33,7 @@ public class RecipeXmlParser {
     private List<RecipeContent.Recipe> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
         List<RecipeContent.Recipe> entries = new ArrayList<>();
 
-        parser.require(XmlPullParser.START_TAG, ns, "feed");
+        parser.require(XmlPullParser.START_TAG, ns, "root");
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;

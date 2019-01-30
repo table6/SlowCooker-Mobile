@@ -98,6 +98,13 @@ public class RecipeDetailFragment extends Fragment {
 
         TextView recipeCookTimeTxt = (TextView) view.findViewById(R.id.recipeDetailCookTime);
         recipeCookTimeTxt.setText(this.cookTime);
+
+//        Button recipeRemoveBtn = (Button) view.findViewById(R.id.recipeDetailRemoveBtn);
+//        recipeRemoveBtn.setOnClickListener(new OnFragmentInteractionListener());
+    }
+
+    public void onRecipeDetailFragmentInteraction(RecipeContent.Recipe recipe) {
+        mListener.onRecipeDetailFragmentInteraction(recipe);
     }
 
     @Override
@@ -129,6 +136,6 @@ public class RecipeDetailFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onRecipeDetailFragmentInteraction();
+        void onRecipeDetailFragmentInteraction(RecipeContent.Recipe recipe);
     }
 }

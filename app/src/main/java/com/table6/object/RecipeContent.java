@@ -2,7 +2,6 @@ package com.table6.object;
 
 import android.app.Application;
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.Xml;
 
 import com.table6.utility.RecipeXmlParser;
@@ -22,12 +21,15 @@ import java.util.List;
 import java.util.Map;
 
 public class RecipeContent extends Application {
-    public static final List<Recipe> ITEMS = new ArrayList<>();
-    public static final Map<String, Recipe> ITEM_MAP = new HashMap<>();
+    public static List<Recipe> ITEMS;
+    public static Map<String, Recipe> ITEM_MAP;
     public static final String recipeInputFileName = "user_saved_recipes.xml";
 
     // https://developer.android.com/training/data-storage/files#java
     public static void getUserSavedRecipes(Context context) {
+        ITEMS = new ArrayList<>();
+        ITEM_MAP = new HashMap<>();
+
         RecipeXmlParser parser = new RecipeXmlParser();
         List<Recipe> parsedList = null;
 
@@ -36,11 +38,11 @@ public class RecipeContent extends Application {
         try {
             parsedList = parser.parse(new FileInputStream(new File(context.getFilesDir(), recipeInputFileName)));
         } catch (FileNotFoundException e) {
-
+            e.printStackTrace();
         } catch (XmlPullParserException e) {
-
+            e.printStackTrace();
         } catch (IOException e ) {
-
+            e.printStackTrace();
         }
 
         if (parsedList != null) {
@@ -64,6 +66,8 @@ public class RecipeContent extends Application {
             serializer.setOutput(writer);
             serializer.startDocument("UTF-8", true);
 
+            serializer.startTag(null, "root");
+
             for (Recipe recipe : ITEMS) {
                 serializer.startTag(null, "entry");
 
@@ -86,6 +90,8 @@ public class RecipeContent extends Application {
                 serializer.endTag(null, "entry");
             }
 
+            serializer.endTag(null, "root");
+
             serializer.endDocument();
             serializer.flush();
 
@@ -98,7 +104,7 @@ public class RecipeContent extends Application {
         }
     }
 
-    private static void addItem(Recipe item) {
+    public static void addItem(Recipe item) {
         ITEMS.add(item);
         ITEM_MAP.put(item.title, item);
     }
@@ -124,8 +130,8 @@ public class RecipeContent extends Application {
         }
 
         @Override
-        public boolean equals(@Nullable Object obj) {
-            return ((Recipe)obj).title == this.title;
+        public boolean equals(Object obj) {
+            return ((Recipe)obj).title.equals(this.title);
         }
     }
 }
