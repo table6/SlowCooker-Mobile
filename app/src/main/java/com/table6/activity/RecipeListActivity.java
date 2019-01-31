@@ -44,11 +44,11 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListF
                 fragmentTransaction.replace(R.id.fragmentContainer, fragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
-
-                fab.hide();
             }
         });
     }
+
+    
 
     @Override
     public void onListFragmentInteraction(RecipeContent.Recipe item) {
@@ -61,15 +61,6 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListF
         fragmentTransaction.replace(R.id.fragmentContainer, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-
-        fab.hide();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        fab.show();
     }
 
     @Override
