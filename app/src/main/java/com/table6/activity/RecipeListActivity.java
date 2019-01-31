@@ -12,7 +12,8 @@ import com.table6.fragment.RecipeDetailFragment;
 import com.table6.fragment.RecipeListFragment;
 import com.table6.object.RecipeContent;
 
-public class RecipeListActivity extends AppCompatActivity implements RecipeListFragment.OnListFragmentInteractionListener, RecipeDetailFragment.OnFragmentInteractionListener, RecipeAddFragment.OnFragmentInteractionListener {
+public class RecipeListActivity extends AppCompatActivity implements RecipeListFragment.OnListFragmentInteractionListener,
+        RecipeDetailFragment.OnFragmentInteractionListener, RecipeAddFragment.OnFragmentInteractionListener {
 
     private static final int NUMBER_COLUMNS = 1;
     private FloatingActionButton fab;
@@ -44,11 +45,18 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListF
                 fragmentTransaction.replace(R.id.fragmentContainer, fragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
+
+                fab.hide();
             }
         });
     }
 
-    
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        fab.show();
+    }
 
     @Override
     public void onListFragmentInteraction(RecipeContent.Recipe item) {
@@ -61,17 +69,23 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListF
         fragmentTransaction.replace(R.id.fragmentContainer, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+
+        fab.hide();
     }
 
     @Override
     public void onRecipeDetailFragmentInteraction(String recipeTitle) {
         RecipeContent.removeItem(recipeTitle);
         RecipeContent.setUserSavedRecipes(getApplicationContext());
+
+        fab.show();
     }
 
     @Override
     public void onRecipeAddFragmentInteraction(RecipeContent.Recipe recipe) {
         RecipeContent.addItem(recipe);
         RecipeContent.setUserSavedRecipes(getApplicationContext());
+
+        fab.show();
     }
 }

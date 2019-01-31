@@ -64,13 +64,13 @@ public class RecipeAddFragment extends Fragment {
         addNewRecipeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create recipe object and pass back to listener
                 String title = titleInput.getText().toString();
                 String prepTime = prepTimeInput.getText().toString();
                 String cookTime = cookTimeInput.getText().toString();
                 String servingSize = servingSizeInput.getText().toString();
                 RecipeContent.Recipe recipe = new RecipeContent.Recipe(title, prepTime, cookTime, servingSize);
 
+                // TODO: Check validity of other fields
                 if (title.isEmpty()) {
                     Toast.makeText(getActivity(), "Title cannot be empty", Toast.LENGTH_LONG ).show();
                 }
@@ -85,13 +85,6 @@ public class RecipeAddFragment extends Fragment {
                 }
             }
         });
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//        }
     }
 
     @Override
