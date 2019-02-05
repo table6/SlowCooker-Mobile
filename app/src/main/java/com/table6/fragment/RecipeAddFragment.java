@@ -1,16 +1,11 @@
 package com.table6.fragment;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.InputFilter;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +14,6 @@ import android.widget.Toast;
 
 import com.table6.activity.R;
 import com.table6.object.RecipeContent;
-
-import java.time.format.DateTimeFormatter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,8 +55,8 @@ public class RecipeAddFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         titleInput = (TextInputEditText) view.findViewById(R.id.titleTextInput);
-        prepTimeInput = (TextInputEditText) makeEditTextTime(view.findViewById(R.id.prepTimeTextInput));
-        cookTimeInput = (TextInputEditText) makeEditTextTime(view.findViewById(R.id.cookTimeTextInput));
+        prepTimeInput = (TextInputEditText) view.findViewById(R.id.prepTimeTextInput);
+        cookTimeInput = (TextInputEditText) view.findViewById(R.id.cookTimeTextInput);
         servingSizeInput = (TextInputEditText) view.findViewById(R.id.servingSizeTextInput);
 
         Button addNewRecipeBtn = (Button) view.findViewById(R.id.addNewRecipeBtn);
@@ -113,49 +106,6 @@ public class RecipeAddFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    public <T> T makeEditTextTime(T asset) {
-        final TextInputEditText editText = (TextInputEditText) asset;
-        if (editText != null) {
-            // Make sure the edit text only has enough space for HH:MM.
-            int maxLength = 5;
-            editText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLength)});
-
-            // Set text to 00:00 by default when it gains focus.
-            editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if(editText.getText().toString().isEmpty()) {
-                        editText.setText("00:00");
-                    }
-                }
-            });
-
-            editText.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @RequiresApi(api = Build.VERSION_CODES.O)
-                @Override
-                public void afterTextChanged(Editable s) {
-                    String colonTime = "HH:mm";
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(colonTime);
-
-                    String originalText = editText.getText().toString();
-                    formatter.parse(originalText);
-                }
-            });
-        }
-
-        return asset;
     }
 
     /**
