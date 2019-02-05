@@ -10,10 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.table6.activity.R;
 import com.table6.object.RecipeContent;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +33,9 @@ public class RecipeAddFragment extends Fragment {
     private TextInputEditText prepTimeInput;
     private TextInputEditText cookTimeInput;
     private TextInputEditText servingSizeInput;
+    private TextInputEditText directionsInput;
+    private TextInputEditText ingredientTextEdit;
+    private ArrayList<TextInputEditText> ingredientTextInputs;
 
     private OnFragmentInteractionListener mListener;
 
@@ -42,7 +49,6 @@ public class RecipeAddFragment extends Fragment {
      *
      * @return A new instance of fragment RecipeAddFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static RecipeAddFragment newInstance() {
         RecipeAddFragment fragment = new RecipeAddFragment();
         Bundle args = new Bundle();
@@ -59,40 +65,61 @@ public class RecipeAddFragment extends Fragment {
         prepTimeInput = (TextInputEditText) view.findViewById(R.id.prepTimeTextInput);
         cookTimeInput = (TextInputEditText) view.findViewById(R.id.cookTimeTextInput);
         servingSizeInput = (TextInputEditText) view.findViewById(R.id.servingSizeTextInput);
+        directionsInput = (TextInputEditText) view.findViewById(R.id.directionsTextInput);
 
         Button addNewRecipeBtn = (Button) view.findViewById(R.id.addNewRecipeBtn);
         addNewRecipeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create recipe object and pass back to listener
                 String title = titleInput.getText().toString();
                 String prepTime = prepTimeInput.getText().toString();
                 String cookTime = cookTimeInput.getText().toString();
                 String servingSize = servingSizeInput.getText().toString();
-                RecipeContent.Recipe recipe = new RecipeContent.Recipe(title, prepTime, cookTime, servingSize);
+                String directions = directionsInput.getText().toString();
 
+                ArrayList<String> ingredients = new ArrayList<>();
+                for(TextInputEditText ingredientInput : ingredientTextInputs) {
+                    String ingredient = ingredientInput.getText().toString();
+                    ingredients.add(ingredient);
+                }
+
+                RecipeContent.Recipe recipe = new RecipeContent.Recipe(title, prepTime, cookTime, servingSize, directions, ingredients);
+
+                // TODO: Check validity of other fields
                 if (title.isEmpty()) {
                     Toast.makeText(getActivity(), "Title cannot be empty", Toast.LENGTH_LONG ).show();
-                }
-                else if (RecipeContent.ITEMS.contains(recipe)) {
-                    Toast.makeText(getActivity(), "A recipe with that title already exists", Toast.LENGTH_LONG ).show();
-                }
-                else {
+                } else if (RecipeContent.ITEMS.contains(recipe)) {
+                    Toast.makeText(getActivity(), "A recipe with that title already exists", Toast.LENGTH_LONG).show();
+                } else {
                     mListener.onRecipeAddFragmentInteraction(recipe);
-                    Toast.makeText(getActivity(), recipe.title + " added to recipe list", Toast.LENGTH_LONG ).show();
+                    Toast.makeText(getActivity(), recipe.title + " added to recipe list", Toast.LENGTH_LONG).show();
 
                     getActivity().getSupportFragmentManager().popBackStack();
-
                 }
             }
         });
-    }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//        }
+        ingredientTextInputs = new ArrayList<>();
+        ingredientTextEdit = view.findViewById(R.id.ingredientsEditTxt);
+
+        ImageButton addIngredientBtn = (ImageButton) view.findViewById(R.id.addIngredientBtn);
+        final LinearLayout ingredientContainer = (LinearLayout) view.findViewById(R.id.ingredientsContainer);
+        addIngredientBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String ingredient = ingredientTextEdit.getText().toString();
+                if(!ingredient.isEmpty()) {
+                    // Add a new EditText to the container
+                    TextInputEditText editText = new TextInputEditText(v.getContext());
+                    editText.setText(ingredient);
+                    ingredientTextEdit.setText("");
+                    ingredientContainer.addView(editText);
+
+                    // Add the new EditText to the list of ingredient text inputs
+                    ingredientTextInputs.add(editText);
+                }
+            }
+        });
     }
 
     @Override
@@ -130,7 +157,6 @@ public class RecipeAddFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onRecipeAddFragmentInteraction(RecipeContent.Recipe recipe);
     }
 }

@@ -87,6 +87,16 @@ public class RecipeContent extends Application {
                 serializer.text(recipe.servingSize);
                 serializer.endTag(null, "servingSize");
 
+                serializer.startTag(null, "directions");
+                serializer.text(recipe.directions);
+                serializer.endTag(null, "directions");
+
+                serializer.startTag(null, "ingredients");
+                for(String ingredient : recipe.ingredients) {
+                    serializer.text(ingredient + ";");
+                }
+                serializer.endTag(null, "ingredients");
+
                 serializer.endTag(null, "entry");
             }
 
@@ -109,17 +119,35 @@ public class RecipeContent extends Application {
         ITEM_MAP.put(item.title, item);
     }
 
+    public static boolean removeItem(String recipeTitle) {
+        if (ITEM_MAP.containsKey(recipeTitle)) {
+            removeItem(ITEM_MAP.get(recipeTitle));
+            return true;
+        }
+
+        return false;
+    }
+
+    private static void removeItem(Recipe recipe) {
+        ITEMS.remove(recipe);
+        ITEM_MAP.remove(recipe.title);
+    }
+
     public static class Recipe {
         public final String title;
         public final String prepTime;
         public final String cookTime;
         public final String servingSize;
+        public final String directions;
+        public final ArrayList<String> ingredients;
 
         public Recipe() {
             this.title = "Example Recipe";
             this.prepTime = "00:00";
             this.cookTime = "00:00";
             this.servingSize = "0";
+            this.directions = "Example directions...";
+            this.ingredients = new ArrayList<>();
         }
 
         public Recipe(String title, String prepTime, String cookTime, String servingSize) {
@@ -127,6 +155,17 @@ public class RecipeContent extends Application {
             this.prepTime = prepTime;
             this.cookTime = cookTime;
             this.servingSize = servingSize;
+            this.directions = "Example directions...";
+            this.ingredients = new ArrayList<>();
+        }
+
+        public Recipe(String title, String prepTime, String cookTime, String servingSize, String directions, ArrayList<String> ingredients) {
+            this.title = title;
+            this.prepTime = prepTime;
+            this.cookTime = cookTime;
+            this.servingSize = servingSize;
+            this.directions = directions;
+            this.ingredients = ingredients;
         }
 
         @Override

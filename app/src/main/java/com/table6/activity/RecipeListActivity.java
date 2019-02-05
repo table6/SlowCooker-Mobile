@@ -12,7 +12,8 @@ import com.table6.fragment.RecipeDetailFragment;
 import com.table6.fragment.RecipeListFragment;
 import com.table6.object.RecipeContent;
 
-public class RecipeListActivity extends AppCompatActivity implements RecipeListFragment.OnListFragmentInteractionListener, RecipeDetailFragment.OnFragmentInteractionListener, RecipeAddFragment.OnFragmentInteractionListener {
+public class RecipeListActivity extends AppCompatActivity implements RecipeListFragment.OnListFragmentInteractionListener,
+        RecipeDetailFragment.OnFragmentInteractionListener, RecipeAddFragment.OnFragmentInteractionListener {
 
     private static final int NUMBER_COLUMNS = 1;
     private FloatingActionButton fab;
@@ -22,8 +23,16 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list_view);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        FragmentManager fragmentManager = getSupportFragmentManager();
 
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
+
+        RecipeListFragment fragment = RecipeListFragment.newInstance(NUMBER_COLUMNS);
+        fragmentTransaction.add(R.id.fragmentContainer, fragment);
+        fragmentTransaction.commit();
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -36,18 +45,17 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListF
                 fragmentTransaction.replace(R.id.fragmentContainer, fragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
+
+                fab.hide();
             }
         });
+    }
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
 
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
-
-        RecipeListFragment fragment = RecipeListFragment.newInstance(NUMBER_COLUMNS);
-        fragmentTransaction.add(R.id.fragmentContainer, fragment);
-        fragmentTransaction.commit();
-
+        fab.show();
     }
 
     @Override
@@ -61,16 +69,23 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListF
         fragmentTransaction.replace(R.id.fragmentContainer, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+
+        fab.hide();
     }
 
     @Override
-    public void onRecipeDetailFragmentInteraction() {
+    public void onRecipeDetailFragmentInteraction(String recipeTitle) {
+        RecipeContent.removeItem(recipeTitle);
+        RecipeContent.setUserSavedRecipes(getApplicationContext());
 
+        fab.show();
     }
 
     @Override
     public void onRecipeAddFragmentInteraction(RecipeContent.Recipe recipe) {
-        RecipeContent.ITEMS.add(recipe);
-        RecipeContent.ITEM_MAP.put(recipe.title, recipe);
+        RecipeContent.addItem(recipe);
+        RecipeContent.setUserSavedRecipes(getApplicationContext());
+
+        fab.show();
     }
 }

@@ -10,6 +10,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 // https://developer.android.com/training/basics/network-ops/xml
@@ -60,6 +61,8 @@ public class RecipeXmlParser {
         String prepTime = null;
         String cookTime = null;
         String servingSize = null;
+        ArrayList<String> ingredients = null;
+        String directions = null;
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -76,12 +79,16 @@ public class RecipeXmlParser {
                 cookTime = readCookTime(parser);
             } else if (name.equals("servingSize")) {
                 servingSize = readServingSize(parser);
+            } else if (name.equals("ingredients")) {
+                ingredients = readIngredients(parser);
+            } else if (name.equals("directions")) {
+                directions = readDirections(parser);
             } else {
                 skip(parser);
             }
         }
 
-        return new RecipeContent.Recipe(title, prepTime, cookTime, servingSize);
+        return new RecipeContent.Recipe(title, prepTime, cookTime, servingSize, directions, ingredients);
     }
 
     // Processes title tags in the feed.
@@ -116,6 +123,22 @@ public class RecipeXmlParser {
         parser.require(XmlPullParser.START_TAG, ns, "servingSize");
         String summary = readText(parser);
         parser.require(XmlPullParser.END_TAG, ns, "servingSize");
+
+        return summary;
+    }
+
+    private ArrayList<String> readIngredients(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, ns, "ingredients");
+        String summary = readText(parser);
+        parser.require(XmlPullParser.END_TAG, ns, "ingredients");
+
+        return new ArrayList<String>(Arrays.asList(summary.split(";")));
+    }
+
+    private String readDirections(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, ns, "directions");
+        String summary = readText(parser);
+        parser.require(XmlPullParser.END_TAG, ns, "directions");
 
         return summary;
     }
