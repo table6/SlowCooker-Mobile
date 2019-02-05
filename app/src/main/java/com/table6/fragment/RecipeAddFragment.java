@@ -1,11 +1,16 @@
 package com.table6.fragment;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +19,8 @@ import android.widget.Toast;
 
 import com.table6.activity.R;
 import com.table6.object.RecipeContent;
+
+import java.time.format.DateTimeFormatter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,7 +49,6 @@ public class RecipeAddFragment extends Fragment {
      *
      * @return A new instance of fragment RecipeAddFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static RecipeAddFragment newInstance() {
         RecipeAddFragment fragment = new RecipeAddFragment();
         Bundle args = new Bundle();
@@ -56,8 +62,8 @@ public class RecipeAddFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         titleInput = (TextInputEditText) view.findViewById(R.id.titleTextInput);
-        prepTimeInput = (TextInputEditText) view.findViewById(R.id.prepTimeTextInput);
-        cookTimeInput = (TextInputEditText) view.findViewById(R.id.cookTimeTextInput);
+        prepTimeInput = (TextInputEditText) makeEditTextTime(view.findViewById(R.id.prepTimeTextInput));
+        cookTimeInput = (TextInputEditText) makeEditTextTime(view.findViewById(R.id.cookTimeTextInput));
         servingSizeInput = (TextInputEditText) view.findViewById(R.id.servingSizeTextInput);
 
         Button addNewRecipeBtn = (Button) view.findViewById(R.id.addNewRecipeBtn);
@@ -73,13 +79,11 @@ public class RecipeAddFragment extends Fragment {
                 // TODO: Check validity of other fields
                 if (title.isEmpty()) {
                     Toast.makeText(getActivity(), "Title cannot be empty", Toast.LENGTH_LONG ).show();
-                }
-                else if (RecipeContent.ITEMS.contains(recipe)) {
-                    Toast.makeText(getActivity(), "A recipe with that title already exists", Toast.LENGTH_LONG ).show();
-                }
-                else {
+                } else if (RecipeContent.ITEMS.contains(recipe)) {
+                    Toast.makeText(getActivity(), "A recipe with that title already exists", Toast.LENGTH_LONG).show();
+                } else {
                     mListener.onRecipeAddFragmentInteraction(recipe);
-                    Toast.makeText(getActivity(), recipe.title + " added to recipe list", Toast.LENGTH_LONG ).show();
+                    Toast.makeText(getActivity(), recipe.title + " added to recipe list", Toast.LENGTH_LONG).show();
 
                     getActivity().getSupportFragmentManager().popBackStack();
                 }
@@ -111,6 +115,49 @@ public class RecipeAddFragment extends Fragment {
         mListener = null;
     }
 
+    public <T> T makeEditTextTime(T asset) {
+        final TextInputEditText editText = (TextInputEditText) asset;
+        if (editText != null) {
+            // Make sure the edit text only has enough space for HH:MM.
+            int maxLength = 5;
+            editText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLength)});
+
+            // Set text to 00:00 by default when it gains focus.
+            editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if(editText.getText().toString().isEmpty()) {
+                        editText.setText("00:00");
+                    }
+                }
+            });
+
+            editText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @RequiresApi(api = Build.VERSION_CODES.O)
+                @Override
+                public void afterTextChanged(Editable s) {
+                    String colonTime = "HH:mm";
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(colonTime);
+
+                    String originalText = editText.getText().toString();
+                    formatter.parse(originalText);
+                }
+            });
+        }
+
+        return asset;
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -122,7 +169,6 @@ public class RecipeAddFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onRecipeAddFragmentInteraction(RecipeContent.Recipe recipe);
     }
 }
