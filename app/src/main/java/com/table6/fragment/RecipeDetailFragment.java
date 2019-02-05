@@ -28,11 +28,13 @@ public class RecipeDetailFragment extends Fragment {
     private static final String ARG_PREP_TIME = "prepTime";
     private static final String ARG_COOK_TIME = "cookTime";
     private static final String ARG_SERVING_SIZE = "servingSize";
+    private static final String ARG_DIRECTIONS = "directions";
 
     private String title;
     private String prepTime;
     private String cookTime;
     private String servingSize;
+    private String directions;
 
     private OnFragmentInteractionListener mListener;
 
@@ -40,7 +42,7 @@ public class RecipeDetailFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static RecipeDetailFragment newInstance(String title, String prepTime, String cookTime, String servingSize) {
+    public static RecipeDetailFragment newInstance(String title, String prepTime, String cookTime, String servingSize, String directions) {
         RecipeDetailFragment fragment = new RecipeDetailFragment();
 
         Bundle args = new Bundle();
@@ -48,6 +50,7 @@ public class RecipeDetailFragment extends Fragment {
         args.putString(ARG_PREP_TIME, prepTime);
         args.putString(ARG_COOK_TIME, cookTime);
         args.putString(ARG_SERVING_SIZE, servingSize);
+        args.putString(ARG_DIRECTIONS, directions);
         fragment.setArguments(args);
 
         return fragment;
@@ -61,6 +64,7 @@ public class RecipeDetailFragment extends Fragment {
         args.putString(ARG_PREP_TIME, recipe.prepTime);
         args.putString(ARG_COOK_TIME, recipe.cookTime);
         args.putString(ARG_SERVING_SIZE, recipe.servingSize);
+        args.putString(ARG_DIRECTIONS, recipe.directions);
         fragment.setArguments(args);
 
         return fragment;
@@ -74,6 +78,7 @@ public class RecipeDetailFragment extends Fragment {
             this.prepTime = getArguments().getString(ARG_PREP_TIME);
             this.cookTime = getArguments().getString(ARG_COOK_TIME);
             this.servingSize = getArguments().getString(ARG_SERVING_SIZE);
+            this.directions = getArguments().getString(ARG_DIRECTIONS);
         }
     }
 
@@ -89,6 +94,11 @@ public class RecipeDetailFragment extends Fragment {
 
         TextView recipeTitleTxt = (TextView) view.findViewById(R.id.recipeDetailTitle);
         recipeTitleTxt.setText(this.title);
+
+        // TODO: Show ingredients
+
+        TextView recipeDirectionsTxt = (TextView) view.findViewById(R.id.recipeDetailDirections);
+        recipeDirectionsTxt.setText(this.directions);;
 
         TextView recipeServingSizeTxt = (TextView) view.findViewById(R.id.recipeDetailServingSize);
         recipeServingSizeTxt.setText(this.servingSize);

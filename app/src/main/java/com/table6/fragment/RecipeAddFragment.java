@@ -10,10 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.table6.activity.R;
 import com.table6.object.RecipeContent;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +33,8 @@ public class RecipeAddFragment extends Fragment {
     private TextInputEditText prepTimeInput;
     private TextInputEditText cookTimeInput;
     private TextInputEditText servingSizeInput;
+    private TextInputEditText directionsInput;
+    private ArrayList<TextInputEditText> ingredientTextInputs;
 
     private OnFragmentInteractionListener mListener;
 
@@ -58,6 +64,7 @@ public class RecipeAddFragment extends Fragment {
         prepTimeInput = (TextInputEditText) view.findViewById(R.id.prepTimeTextInput);
         cookTimeInput = (TextInputEditText) view.findViewById(R.id.cookTimeTextInput);
         servingSizeInput = (TextInputEditText) view.findViewById(R.id.servingSizeTextInput);
+        directionsInput = (TextInputEditText) view.findViewById(R.id.directionsTextInput);
 
         Button addNewRecipeBtn = (Button) view.findViewById(R.id.addNewRecipeBtn);
         addNewRecipeBtn.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +74,15 @@ public class RecipeAddFragment extends Fragment {
                 String prepTime = prepTimeInput.getText().toString();
                 String cookTime = cookTimeInput.getText().toString();
                 String servingSize = servingSizeInput.getText().toString();
-                RecipeContent.Recipe recipe = new RecipeContent.Recipe(title, prepTime, cookTime, servingSize);
+                String directions = directionsInput.getText().toString();
+
+                ArrayList<String> ingredients = new ArrayList<>();
+                for(TextInputEditText ingredientInput : ingredientTextInputs) {
+                    String ingredient = ingredientInput.getText().toString();
+                    ingredients.add(ingredient);
+                }
+
+                RecipeContent.Recipe recipe = new RecipeContent.Recipe(title, prepTime, cookTime, servingSize, directions, ingredients);
 
                 // TODO: Check validity of other fields
                 if (title.isEmpty()) {
@@ -80,6 +95,22 @@ public class RecipeAddFragment extends Fragment {
 
                     getActivity().getSupportFragmentManager().popBackStack();
                 }
+            }
+        });
+
+        ingredientTextInputs = new ArrayList<>();
+
+        ImageButton addIngredientBtn = (ImageButton) view.findViewById(R.id.addIngredientBtn);
+        final LinearLayout ingredientContainer = (LinearLayout) view.findViewById(R.id.ingredientsContainer);
+        addIngredientBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Add a new EditText to the container
+                TextInputEditText editText = new TextInputEditText(v.getContext());
+                ingredientContainer.addView(editText);
+
+                // Add the new EditText to the list of ingredient text inputs
+                ingredientTextInputs.add(editText);
             }
         });
     }

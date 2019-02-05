@@ -62,7 +62,7 @@ public class RecipeXmlParser {
         String cookTime = null;
         String servingSize = null;
         ArrayList<String> ingredients = null;
-        ArrayList<String> directions = null;
+        String directions = null;
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -88,7 +88,7 @@ public class RecipeXmlParser {
             }
         }
 
-        return new RecipeContent.Recipe(title, prepTime, cookTime, servingSize, ingredients, directions);
+        return new RecipeContent.Recipe(title, prepTime, cookTime, servingSize, directions, ingredients);
     }
 
     // Processes title tags in the feed.
@@ -135,12 +135,12 @@ public class RecipeXmlParser {
         return new ArrayList<String>(Arrays.asList(summary.split(";")));
     }
 
-    private ArrayList<String> readDirections(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private String readDirections(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, ns, "directions");
         String summary = readText(parser);
         parser.require(XmlPullParser.END_TAG, ns, "directions");
 
-        return new ArrayList<String>(Arrays.asList(summary.split(";")));
+        return summary;
     }
 
     // For the tags title and summary, extracts their text values.
