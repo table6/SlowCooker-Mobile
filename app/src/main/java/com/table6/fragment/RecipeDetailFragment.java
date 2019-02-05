@@ -9,11 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.table6.activity.R;
 import com.table6.object.RecipeContent;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,12 +32,14 @@ public class RecipeDetailFragment extends Fragment {
     private static final String ARG_COOK_TIME = "cookTime";
     private static final String ARG_SERVING_SIZE = "servingSize";
     private static final String ARG_DIRECTIONS = "directions";
+    private static final String ARG_INGREDIENTS = "ingredients";
 
     private String title;
     private String prepTime;
     private String cookTime;
     private String servingSize;
     private String directions;
+    private ArrayList<String> ingredients;
 
     private OnFragmentInteractionListener mListener;
 
@@ -42,7 +47,7 @@ public class RecipeDetailFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static RecipeDetailFragment newInstance(String title, String prepTime, String cookTime, String servingSize, String directions) {
+    public static RecipeDetailFragment newInstance(String title, String prepTime, String cookTime, String servingSize, String directions, ArrayList<String> ingredients) {
         RecipeDetailFragment fragment = new RecipeDetailFragment();
 
         Bundle args = new Bundle();
@@ -51,6 +56,7 @@ public class RecipeDetailFragment extends Fragment {
         args.putString(ARG_COOK_TIME, cookTime);
         args.putString(ARG_SERVING_SIZE, servingSize);
         args.putString(ARG_DIRECTIONS, directions);
+        args.putStringArrayList(ARG_INGREDIENTS, ingredients);
         fragment.setArguments(args);
 
         return fragment;
@@ -65,6 +71,7 @@ public class RecipeDetailFragment extends Fragment {
         args.putString(ARG_COOK_TIME, recipe.cookTime);
         args.putString(ARG_SERVING_SIZE, recipe.servingSize);
         args.putString(ARG_DIRECTIONS, recipe.directions);
+        args.putStringArrayList(ARG_INGREDIENTS, recipe.ingredients);
         fragment.setArguments(args);
 
         return fragment;
@@ -79,6 +86,7 @@ public class RecipeDetailFragment extends Fragment {
             this.cookTime = getArguments().getString(ARG_COOK_TIME);
             this.servingSize = getArguments().getString(ARG_SERVING_SIZE);
             this.directions = getArguments().getString(ARG_DIRECTIONS);
+            this.ingredients = getArguments().getStringArrayList(ARG_INGREDIENTS);
         }
     }
 
@@ -96,9 +104,20 @@ public class RecipeDetailFragment extends Fragment {
         recipeTitleTxt.setText(this.title);
 
         // TODO: Show ingredients
+        LinearLayout ingredientContainer = (LinearLayout) view.findViewById(R.id.recipeDetailIngredientContainer);
+        if (!ingredients.isEmpty()) {
+            for (String ingredient : ingredients) {
+                TextView ingredientTextView = new TextView(getContext());
+                ingredientTextView.setText(ingredient);
+                ingredientContainer.addView(ingredientTextView);
+            }
+        } else {
+            TextView ingredientTextView = new TextView(getContext());
+            ingredientTextView.setText("No ingredients to show");
+        }
 
         TextView recipeDirectionsTxt = (TextView) view.findViewById(R.id.recipeDetailDirections);
-        recipeDirectionsTxt.setText(this.directions);;
+        recipeDirectionsTxt.setText(this.directions);
 
         TextView recipeServingSizeTxt = (TextView) view.findViewById(R.id.recipeDetailServingSize);
         recipeServingSizeTxt.setText(this.servingSize);

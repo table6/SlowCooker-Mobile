@@ -34,6 +34,7 @@ public class RecipeAddFragment extends Fragment {
     private TextInputEditText cookTimeInput;
     private TextInputEditText servingSizeInput;
     private TextInputEditText directionsInput;
+    private TextInputEditText ingredientTextEdit;
     private ArrayList<TextInputEditText> ingredientTextInputs;
 
     private OnFragmentInteractionListener mListener;
@@ -99,18 +100,24 @@ public class RecipeAddFragment extends Fragment {
         });
 
         ingredientTextInputs = new ArrayList<>();
+        ingredientTextEdit = view.findViewById(R.id.ingredientsEditTxt);
 
         ImageButton addIngredientBtn = (ImageButton) view.findViewById(R.id.addIngredientBtn);
         final LinearLayout ingredientContainer = (LinearLayout) view.findViewById(R.id.ingredientsContainer);
         addIngredientBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Add a new EditText to the container
-                TextInputEditText editText = new TextInputEditText(v.getContext());
-                ingredientContainer.addView(editText);
+                String ingredient = ingredientTextEdit.getText().toString();
+                if(!ingredient.isEmpty()) {
+                    // Add a new EditText to the container
+                    TextInputEditText editText = new TextInputEditText(v.getContext());
+                    editText.setText(ingredient);
+                    ingredientTextEdit.setText("");
+                    ingredientContainer.addView(editText);
 
-                // Add the new EditText to the list of ingredient text inputs
-                ingredientTextInputs.add(editText);
+                    // Add the new EditText to the list of ingredient text inputs
+                    ingredientTextInputs.add(editText);
+                }
             }
         });
     }

@@ -93,7 +93,7 @@ public class RecipeContent extends Application {
 
                 serializer.startTag(null, "ingredients");
                 for(String ingredient : recipe.ingredients) {
-                    serializer.text(ingredient);
+                    serializer.text(ingredient + ";");
                 }
                 serializer.endTag(null, "ingredients");
 
