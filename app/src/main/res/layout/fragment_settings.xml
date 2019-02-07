@@ -4,11 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    tools:context="com.table6.view.SettingsView">
+    android:gravity="center">
 
     <RadioGroup
-        android:id="@+id/temperatureGroup"
+        android:id="@+id/settingsTemperatureGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
@@ -26,7 +25,6 @@
 
         <RadioButton
             android:id="@+id/fBtn"
-            android:checked="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

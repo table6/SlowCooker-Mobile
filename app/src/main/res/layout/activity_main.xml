@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,13 +10,13 @@
     tools:showIn="@layout/app_bar_main_activity_drawer">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/mainActivityViewContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp"></LinearLayout>
+        tools:layout_editor_absoluteX="0dp" />
 
     <ToggleButton
         android:id="@+id/secureLidToggleBtn"
@@ -29,6 +30,6 @@
         android:textOn="Lid\nSecured"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/mainActivityViewContainer" />
 
 </android.support.constraint.ConstraintLayout>

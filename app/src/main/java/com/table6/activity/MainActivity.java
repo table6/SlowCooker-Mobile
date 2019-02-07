@@ -12,23 +12,25 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.ToggleButton;
 
-import com.table6.view.CookTimeView;
+import com.table6.fragment.CookTimeFragment;
+import com.table6.fragment.SettingsFragment;
+import com.table6.fragment.TemperatureFragment;
 import com.table6.view.HelpView;
 import com.table6.view.RPiView;
-import com.table6.view.TemperatureView;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        SettingsFragment.OnSettingsFragmentInteractionListener {
 
-    private LinearLayout viewsList;
+    private String TEMPERATURE_FRAGMENT = "temperatureFragment";
+    private String TEMP_MODE = "tempMode";
+    private int TEMP_MODE_DEFAULT = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +57,16 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        viewsList = (LinearLayout) findViewById(R.id.linearLayout);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        View cookTimeDisplay = LayoutInflater.from(this).inflate(R.layout.view_cook_time_view, viewsList, true);
-        CookTimeView cookTimeDisplayView = new CookTimeView(getApplicationContext(), null);
+        CookTimeFragment cookTimeFragment = CookTimeFragment.newInstance();
+        fragmentTransaction.add(R.id.mainActivityViewContainer, cookTimeFragment);
 
-        View temperatureDisplay = LayoutInflater.from(this).inflate(R.layout.view_temperature_view, viewsList, true);
-        TemperatureView temperatureDisplayView = new TemperatureView(getApplicationContext(), null);
+        TemperatureFragment temperatureFragment = TemperatureFragment.newInstance(TEMP_MODE);
+        fragmentTransaction.add(R.id.mainActivityViewContainer, temperatureFragment, TEMPERATURE_FRAGMENT);
+
+        fragmentTransaction.commit();
 
         ToggleButton secureLidToggleBtn = (ToggleButton) findViewById(R.id.secureLidToggleBtn);
         secureLidToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -102,10 +107,14 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
 
-//            startActivity(new Intent(MainActivity.this, SettingsView.class));
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
 
+            SettingsFragment fragment = SettingsFragment.newInstance(TEMP_MODE);
+            fragmentTransaction.replace(R.id.mainActivityViewContainer, fragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
 
             return true;
         }
@@ -132,5 +141,14 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onSettingsFragmentInteraction() {
+//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+//        int tempMode = sharedPreferences.getInt(TEMP_MODE, TEMP_MODE_DEFAULT);
+//
+//        TemperatureFragment temperatureFragment = (TemperatureFragment) getSupportFragmentManager().findFragmentByTag(TEMPERATURE_FRAGMENT);
+//        temperatureFragment.setMode(tempMode);
     }
 }
