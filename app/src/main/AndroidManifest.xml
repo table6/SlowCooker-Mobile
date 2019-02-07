@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".RecipeListActivity"></activity>
+        <activity android:name="com.table6.view.RPiView"></activity>
+        <activity android:name=".RecipeListActivity" />
         <activity android:name="com.table6.view.HelpView" />
         <activity android:name="com.table6.view.SettingsView" />
         <activity

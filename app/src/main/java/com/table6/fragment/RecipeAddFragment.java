@@ -117,6 +117,8 @@ public class RecipeAddFragment extends Fragment {
 
                     // Add the new EditText to the list of ingredient text inputs
                     ingredientTextInputs.add(editText);
+                } else {
+                    Toast.makeText(getActivity(), "Fill in the ingredient line to add it to the recipe.", Toast.LENGTH_LONG).show();
                 }
             }
         });
