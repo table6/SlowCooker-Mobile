@@ -25,12 +25,10 @@ import com.table6.view.HelpView;
 import com.table6.view.RPiView;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-        SettingsFragment.OnSettingsFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     private String TEMPERATURE_FRAGMENT = "temperatureFragment";
     private String TEMP_MODE = "tempMode";
-    private int TEMP_MODE_DEFAULT = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,14 +139,5 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    public void onSettingsFragmentInteraction() {
-//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-//        int tempMode = sharedPreferences.getInt(TEMP_MODE, TEMP_MODE_DEFAULT);
-//
-//        TemperatureFragment temperatureFragment = (TemperatureFragment) getSupportFragmentManager().findFragmentByTag(TEMPERATURE_FRAGMENT);
-//        temperatureFragment.setMode(tempMode);
     }
 }
