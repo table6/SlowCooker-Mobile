@@ -103,7 +103,6 @@ public class RecipeDetailFragment extends Fragment {
         TextView recipeTitleTxt = (TextView) view.findViewById(R.id.recipeDetailTitle);
         recipeTitleTxt.setText(this.title);
 
-        // TODO: Show ingredients
         LinearLayout ingredientContainer = (LinearLayout) view.findViewById(R.id.recipeDetailIngredientContainer);
         if (!ingredients.isEmpty()) {
             for (String ingredient : ingredients) {
@@ -117,7 +116,11 @@ public class RecipeDetailFragment extends Fragment {
         }
 
         TextView recipeDirectionsTxt = (TextView) view.findViewById(R.id.recipeDetailDirections);
-        recipeDirectionsTxt.setText(this.directions);
+        if (!directions.isEmpty()) {
+            recipeDirectionsTxt.setText(this.directions);
+        } else {
+            recipeDirectionsTxt.setText("No directions to show");
+        }
 
         TextView recipeServingSizeTxt = (TextView) view.findViewById(R.id.recipeDetailServingSize);
         recipeServingSizeTxt.setText(this.servingSize);

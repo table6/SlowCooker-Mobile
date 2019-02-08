@@ -13,7 +13,7 @@ import com.table6.fragment.RecipeListFragment;
 import com.table6.object.RecipeContent;
 
 public class RecipeListActivity extends AppCompatActivity implements RecipeListFragment.OnListFragmentInteractionListener,
-        RecipeDetailFragment.OnFragmentInteractionListener, RecipeAddFragment.OnFragmentInteractionListener {
+        RecipeDetailFragment.OnFragmentInteractionListener, RecipeAddFragment.OnRecipeAddFragmentInteractionListener {
 
     private static final int NUMBER_COLUMNS = 1;
     private FloatingActionButton fab;

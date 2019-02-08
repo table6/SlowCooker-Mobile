@@ -1,6 +1,7 @@
 package com.table6.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -15,19 +16,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.ToggleButton;
 
-import com.table6.fragment.CookTimeFragment;
+import com.table6.fragment.CookerStatsFragment;
 import com.table6.fragment.SettingsFragment;
-import com.table6.fragment.TemperatureFragment;
 import com.table6.view.HelpView;
 import com.table6.view.RPiView;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        CookerStatsFragment.OnFragmentInteractionListener {
 
-    private String TEMPERATURE_FRAGMENT = "temperatureFragment";
     private String TEMP_MODE = "tempMode";
 
     @Override
@@ -37,6 +35,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // TODO: implement social media sharing
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,24 +57,10 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        CookTimeFragment cookTimeFragment = CookTimeFragment.newInstance();
-        fragmentTransaction.add(R.id.mainActivityViewContainer, cookTimeFragment);
-
-        TemperatureFragment temperatureFragment = TemperatureFragment.newInstance(TEMP_MODE);
-        fragmentTransaction.add(R.id.mainActivityViewContainer, temperatureFragment, TEMPERATURE_FRAGMENT);
-
+        CookerStatsFragment fragment = CookerStatsFragment.newInstance(this.TEMP_MODE);
+        fragmentTransaction.add(R.id.mainActivityContainer, fragment);
         fragmentTransaction.commit();
 
-        ToggleButton secureLidToggleBtn = (ToggleButton) findViewById(R.id.secureLidToggleBtn);
-        secureLidToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    // The toggle is enabled
-                } else {
-                    // The toggle is disabled
-                }
-            }
-        });
     }
 
     @Override
@@ -109,8 +94,8 @@ public class MainActivity extends AppCompatActivity
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
 
-            SettingsFragment fragment = SettingsFragment.newInstance(TEMP_MODE);
-            fragmentTransaction.replace(R.id.mainActivityViewContainer, fragment);
+            SettingsFragment fragment = SettingsFragment.newInstance(this.TEMP_MODE);
+            fragmentTransaction.replace(R.id.mainActivityContainer, fragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
 
@@ -139,5 +124,10 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }
