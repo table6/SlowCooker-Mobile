@@ -24,9 +24,13 @@ import com.table6.view.RPiView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        CookerStatsFragment.OnFragmentInteractionListener {
+        CookerStatsFragment.OnFragmentInteractionListener,
+        SettingsFragment.OnSettingsFragmentDoneListener {
 
     private String TEMP_MODE = "tempMode";
+    private String MEASUREMENT_MODE = "measurementMode";
+
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +40,8 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         // TODO: implement social media sharing
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        this.fab = (FloatingActionButton) findViewById(R.id.mainActivityFab);
+        this.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -94,10 +98,12 @@ public class MainActivity extends AppCompatActivity
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
 
-            SettingsFragment fragment = SettingsFragment.newInstance(this.TEMP_MODE);
+            SettingsFragment fragment = SettingsFragment.newInstance(this.TEMP_MODE, this.MEASUREMENT_MODE);
             fragmentTransaction.replace(R.id.mainActivityContainer, fragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
+
+            this.fab.hide();
 
             return true;
         }
@@ -129,5 +135,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void onSettingsFragmentDone() {
+        this.fab.show();
     }
 }

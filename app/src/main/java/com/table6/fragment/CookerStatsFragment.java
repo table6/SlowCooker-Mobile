@@ -33,13 +33,13 @@ public class CookerStatsFragment extends Fragment {
     private TextView timeTxt;
     private TextView temperatureTxt;
     private TextView temperatureModeTxt;
-    private SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
 
     private OnFragmentInteractionListener mListener;
 
+    // https://stackoverflow.com/questions/6400846/updating-time-and-date-by-the-second-in-android
+    private SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
     private final Handler handler = new Handler();
 
-    // https://stackoverflow.com/questions/6400846/updating-time-and-date-by-the-second-in-android
     private final Runnable runnable = new Runnable() {
         public void run() {
             if (fragmentActive) {

@@ -32,7 +32,7 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListF
         fragmentTransaction.add(R.id.fragmentContainer, fragment);
         fragmentTransaction.commit();
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.recipeListActivityFab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

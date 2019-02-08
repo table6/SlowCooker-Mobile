@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,34 +8,67 @@
     android:gravity="center">
 
     <RadioGroup
-        android:id="@+id/settingsTemperatureGroup"
+        android:id="@+id/settingsFragmentModeGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:padding="20dp"
-        tools:layout_editor_absoluteX="143dp"
-        tools:layout_editor_absoluteY="211dp" >
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/temperatureGroupLabel"
-            android:textStyle="bold"
-            android:textSize="20dp"
-            android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Temperature"/>
+            android:padding="10dp"
+            android:text="Mode"
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
         <RadioButton
-            android:id="@+id/fBtn"
+            android:id="@+id/settingsFragmentCookBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cook" />
+
+        <RadioButton
+            android:id="@+id/settingsFragmentProbeBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Probe" />
+
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/settingsFragmentMeasurementGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:padding="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/settingsFragmentModeGroup"
+        tools:layout_editor_absoluteX="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Measurement"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <RadioButton
+            android:id="@+id/settingsFragmentFahrenheitBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Fahrenheit" />
 
         <RadioButton
-            android:id="@+id/cBtn"
+            android:id="@+id/settingsFragmentCelsiusBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Celsius" />
     </RadioGroup>
-</LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
