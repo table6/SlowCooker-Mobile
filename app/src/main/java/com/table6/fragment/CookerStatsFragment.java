@@ -40,13 +40,13 @@ public class CookerStatsFragment extends Fragment {
     private final Handler handler = new Handler();
 
     // https://stackoverflow.com/questions/6400846/updating-time-and-date-by-the-second-in-android
-    private final Runnable mRunnable = new Runnable() {
+    private final Runnable runnable = new Runnable() {
         public void run() {
             if (fragmentActive) {
                 if (timeTxt != null) {
                     timeTxt.setText(getTime());
                 }
-                handler.postDelayed(mRunnable, 1000);
+                handler.postDelayed(runnable, 1000);
             }
         }
     };
@@ -167,7 +167,7 @@ public class CookerStatsFragment extends Fragment {
 
     private void startClock() {
         fragmentActive = true;
-        handler.post(mRunnable);
+        handler.post(runnable);
     }
 
     public String getTemperatureMode() {

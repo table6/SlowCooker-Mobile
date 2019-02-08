@@ -21,7 +21,7 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListF
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recipe_list_view);
+        setContentView(R.layout.activity_recipe_list);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
 
