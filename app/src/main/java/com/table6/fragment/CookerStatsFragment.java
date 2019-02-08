@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,27 +18,38 @@ import android.widget.ToggleButton;
 
 import com.table6.activity.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link CookerStatsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link CookerStatsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class CookerStatsFragment extends Fragment {
 
     private static final int TEMPERATURE_MODE_FAHRENHEIT = 0;
     private static final int TEMPERATURE_MODE_CELSIUS = 1;
     private static final String ARG_TEMPERATURE_MODE_PREF = "modePref";
 
+    private boolean fragmentActive;
     private String temperatureModePref;
+    private TextView timeTxt;
     private TextView temperatureTxt;
     private TextView temperatureModeTxt;
+    private SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
 
     private OnFragmentInteractionListener mListener;
+
+    private final Handler handler = new Handler();
+
+    // https://stackoverflow.com/questions/6400846/updating-time-and-date-by-the-second-in-android
+    private final Runnable mRunnable = new Runnable() {
+        public void run() {
+            if (fragmentActive) {
+                if (timeTxt != null) {
+                    timeTxt.setText(getTime());
+                }
+                handler.postDelayed(mRunnable, 1000);
+            }
+        }
+    };
 
     public CookerStatsFragment() {
         // Required empty public constructor
@@ -71,6 +83,7 @@ public class CookerStatsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        this.timeTxt = view.findViewById(R.id.cookerStatsTimeTxt);
         this.temperatureTxt = view.findViewById(R.id.cookerStatsFragmentTemperatureTxt);
         this.temperatureModeTxt = view.findViewById(R.id.cookerStatsFragmentTemperatureModeTxt);
 
@@ -88,6 +101,8 @@ public class CookerStatsFragment extends Fragment {
                 }
             }
         });
+
+        startClock();
     }
 
     //    // TODO: Rename method, update argument and hook method into UI event
@@ -143,6 +158,16 @@ public class CookerStatsFragment extends Fragment {
             this.setTemperatureText(this.fahrenheitToCelsius(oldTemperature));
         }
 
+    }
+
+    // TODO: Update once RPi interface is implemented.
+    private String getTime() {
+        return sdf.format(new Date(System.currentTimeMillis()));
+    }
+
+    private void startClock() {
+        fragmentActive = true;
+        handler.post(mRunnable);
     }
 
     public String getTemperatureMode() {
