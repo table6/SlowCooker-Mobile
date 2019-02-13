@@ -13,7 +13,7 @@ import com.table6.fragment.RecipeListFragment;
 import com.table6.object.RecipeContent;
 
 public class RecipeListActivity extends AppCompatActivity implements RecipeListFragment.OnListFragmentInteractionListener,
-        RecipeDetailFragment.OnFragmentInteractionListener, RecipeAddFragment.OnFragmentInteractionListener {
+        RecipeDetailFragment.OnFragmentInteractionListener, RecipeAddFragment.OnRecipeAddFragmentInteractionListener {
 
     private static final int NUMBER_COLUMNS = 1;
     private FloatingActionButton fab;
@@ -21,7 +21,7 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListF
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recipe_list_view);
+        setContentView(R.layout.activity_recipe_list);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -32,7 +32,7 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeListF
         fragmentTransaction.add(R.id.fragmentContainer, fragment);
         fragmentTransaction.commit();
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.recipeListActivityFab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

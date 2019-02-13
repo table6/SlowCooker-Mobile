@@ -5,10 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.table6.activity.R;
 
-public class SettingsView extends AppCompatActivity {
+public class RPiView extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings_view);
+        setContentView(R.layout.activity_rpi_view);
     }
 }

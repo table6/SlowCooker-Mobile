@@ -8,4 +8,11 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_recipe_list_view">Recipes</string>
+    <string name="contact_email">gebhardt.6@wright.edu</string>
+
+    <!--https://stackoverflow.com/questions/9204303/android-is-it-possible-to-add-a-clickable-link-into-a-string-resource-->
+    <string name="github"><a href="https://github.com/jonathondgebhardt/The-Most-ve-er-st-Bestestery-Smartesteresteresteringer-Sloweringer-Cookery">The Most’ve’er’st Bestestery Smartesteresteresteringer Sloweringer Cookery</a></string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
