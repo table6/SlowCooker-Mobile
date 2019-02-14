@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,54 +11,153 @@
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp">
 
-    <TextView
-        android:id="@+id/helpViewSlowCookerVersionTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="SlowCooker version: v0.0.1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <LinearLayout
-        android:id="@+id/linearLayout8"
-        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/helpViewSlowCookerVersionTxt">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Contact: " />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/helpViewContactTxt"
-            android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SlowCooker version: " />
+
+            <TextView
+                android:id="@+id/helpViewSlowCookerVersionTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="v0.0.1"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autoLink="email"
-            android:text="@string/contact_email"/>
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RPi IP address: " />
+
+            <TextView
+                android:id="@+id/helpViewRpiIPTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.0.0.0" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Flask version: " />
+
+            <TextView
+                android:id="@+id/helpViewFlaskTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="v0.0.0" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MongoDB version: " />
+
+            <TextView
+                android:id="@+id/helpViewMongoTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="v0.0.0" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Time last connected: " />
+
+            <TextView
+                android:id="@+id/helpViewLastConnectedTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout8">
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="GitHub: "/>
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
 
-        <TextView
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Contact: " />
+
+            <TextView
+                android:id="@+id/helpViewContactTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="email"
+                android:text="@string/contact_email" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:autoLink="web"
-            android:text="@string/github"/>
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GitHub: " />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:text="@string/github" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
