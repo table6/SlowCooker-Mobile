@@ -11,10 +11,6 @@
             android:icon="@drawable/ic_local_dining_24px"
             android:title="Recipes" />
         <item
-            android:id="@+id/nav_presets"
-            android:icon="@drawable/ic_assignment_24px"
-            android:title="Presets" />
-        <item
             android:id="@+id/nav_manageSlowCooker"
             android:icon="@drawable/ic_menu_manage"
             android:title="Slow Cooker" />
