@@ -94,23 +94,17 @@ public class CookerStatsFragment extends Fragment {
         ToggleButton secureLidToggleBtn = (ToggleButton) view.findViewById(R.id.cookerStatsSecureLidToggleBtn);
         secureLidToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // TODO: In any case, run a thread to attempt to secure/unsecure lid
                 if (isChecked) {
-                    // The toggle is enabled
+                    // The toggle is enabled. Attempt to secure lid.
                 } else {
-                    // The toggle is disabled
+                    // The toggle is disabled. Attempt to unsecure lid.
                 }
             }
         });
 
         startClock();
     }
-
-    //    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
 
     @Override
     public void onAttach(Context context) {
@@ -129,18 +123,7 @@ public class CookerStatsFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 
@@ -186,12 +169,10 @@ public class CookerStatsFragment extends Fragment {
         return this.temperatureTxt.getText().toString();
     }
 
-    // multiply by 1.8 and add 32
     public double celsiusToFahrenheit(double x) {
         return x * 1.8 + 32;
     }
 
-    // subtract 32 and divide by 1.8
     public double fahrenheitToCelsius(double x) {
         return (x - 32) / 1.8;
     }

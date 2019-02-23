@@ -1,16 +1,26 @@
 package com.table6.object;
 
-public class RaspberryPi {
+import com.table6.utility.RetrieveFeedTask;
 
-    private String url;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+public class RaspberryPi implements RetrieveFeedTask.RetrieveFeedTaskListener {
+
+    private URL url = null;
 
     public RaspberryPi() {
 
     }
 
     public boolean connect() {
-
-        // Start thread to attempt connect a finite amount of times.
+        try {
+            this.url = new URL("http://10.0.2.2:5000");
+            RetrieveFeedTask task = new RetrieveFeedTask(this);
+            task.execute(this.url);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
 
         return false;
     }
@@ -49,5 +59,10 @@ public class RaspberryPi {
 
     private void sendHttpRequest(String x) {
         // Accept string x as request to send to RPi via thread.
+    }
+
+    @Override
+    public void onRetrieveFeedTaskResponse(String x) {
+        System.out.println("\t\tRPi onRetrieveFeedTaskResponse: x=" + x);
     }
 }
