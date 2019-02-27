@@ -3,6 +3,7 @@ package com.table6.fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -18,15 +19,28 @@ import android.widget.ToggleButton;
 
 import com.table6.activity.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class CookerStatsFragment extends Fragment {
 
     private static final int TEMPERATURE_MODE_FAHRENHEIT = 0;
     private static final int TEMPERATURE_MODE_CELSIUS = 1;
     private static final String ARG_TEMPERATURE_MODE_PREF = "modePref";
+    private static final String[] PAGES = {"temperature", "cook_time"};
+    private static final int UPDATE_FREQUENCY = 60;
 
     private boolean fragmentActive;
     private String temperatureModePref;
@@ -43,10 +57,8 @@ public class CookerStatsFragment extends Fragment {
     private final Runnable runnable = new Runnable() {
         public void run() {
             if (fragmentActive) {
-                if (timeTxt != null) {
-                    timeTxt.setText(getTime());
-                }
-                handler.postDelayed(runnable, 1000);
+                new RetrieveFeedTask().execute();
+                handler.postDelayed(runnable, UPDATE_FREQUENCY * 1000);
             }
         }
     };
@@ -69,6 +81,7 @@ public class CookerStatsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             this.temperatureModePref = getArguments().getString(ARG_TEMPERATURE_MODE_PREF);
+            startUpdateThread();
         }
     }
 
@@ -102,8 +115,6 @@ public class CookerStatsFragment extends Fragment {
                 }
             }
         });
-
-        startClock();
     }
 
     @Override
@@ -148,7 +159,7 @@ public class CookerStatsFragment extends Fragment {
         return sdf.format(new Date(System.currentTimeMillis()));
     }
 
-    private void startClock() {
+    private void startUpdateThread() {
         fragmentActive = true;
         handler.post(runnable);
     }
@@ -175,5 +186,91 @@ public class CookerStatsFragment extends Fragment {
 
     public double fahrenheitToCelsius(double x) {
         return (x - 32) / 1.8;
+    }
+
+    public void setCookTime(String x) {
+        this.timeTxt.setText(x);
+    }
+
+    // https://www.tutorialspoint.com/android/android_json_parser.htm
+    public static class RetrieveFeedTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            for (String page : PAGES) {
+                HttpURLConnection connection = null;
+                StringBuilder sb = new StringBuilder();
+
+                try {
+                    connection = (HttpURLConnection) new URL("http://3.18.34.75:5000/" + page).openConnection();
+                    connection.setReadTimeout(15000);
+                    connection.setConnectTimeout(15000);
+                    connection.connect();
+
+                    int responseCode = connection.getResponseCode();
+
+                    if (responseCode == HttpsURLConnection.HTTP_OK) {
+                        String line;
+                        BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+                        while ((line = br.readLine()) != null) {
+                            sb.append(line);
+                        }
+
+                        // Do something with response.
+                        JSONObject json = new JSONObject(sb.toString());
+                        System.out.println(json);
+                        System.out.println("\t\tCookerStatsFragment: page=" + page + ", response=" + json);
+
+//                        if (page.equals("temperature")) {
+//                            String temperature = json.getString("temperature");
+//                            if (temperature != null) {
+//                                setTemperatureText(temperature);
+//                            }
+//                        }
+//
+//                        if (page.equals("cook_time")) {
+//                            String startTime = json.getString("start_time");
+//                            if (startTime != null) {
+//                                setCookTime(startTime);
+//                                System.out.println("\t\t" + startTime);
+//                            }
+//                        }
+
+
+                    } else if(responseCode == HttpURLConnection.HTTP_CONFLICT) {
+                        String line;
+                        BufferedReader br = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+
+                        while ((line = br.readLine()) != null) {
+                            sb.append(line);
+                        }
+
+                        // Report failure.
+                        System.out.println("\t\tCookerStatsFragment: page=" + page + ", responseError=" + sb.toString());
+                    } else {
+                        return null;
+                    }
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    connection.disconnect();
+                }
+
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+
+        }
     }
 }

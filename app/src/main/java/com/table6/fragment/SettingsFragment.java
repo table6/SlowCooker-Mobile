@@ -81,7 +81,6 @@ public class SettingsFragment extends Fragment {
         temperatureModeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-
                 RadioButton cookRadioButton = (RadioButton) getView().findViewById(R.id.settingsFragmentCookBtn);
 
                 // If fahrenheit is checked, set mode to 0, otherwise set to 1.
@@ -113,7 +112,6 @@ public class SettingsFragment extends Fragment {
         measurementModeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-
                 RadioButton fahrenheitRadioBtnId = (RadioButton) getView().findViewById(R.id.settingsFragmentFahrenheitBtn);
 
                 // If fahrenheit is checked, set mode to 0, otherwise set to 1.

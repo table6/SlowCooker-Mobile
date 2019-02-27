@@ -16,7 +16,6 @@ import android.view.MenuItem;
 
 import com.table6.fragment.CookerStatsFragment;
 import com.table6.fragment.SettingsFragment;
-import com.table6.object.RaspberryPi;
 import com.table6.view.HelpView;
 import com.table6.view.SlowCookerView;
 
@@ -50,9 +49,6 @@ public class MainActivity extends AppCompatActivity
         CookerStatsFragment fragment = CookerStatsFragment.newInstance(this.TEMP_MODE);
         fragmentTransaction.add(R.id.mainActivityContainer, fragment);
         fragmentTransaction.commit();
-
-        RaspberryPi rpi = new RaspberryPi();
-        rpi.connect();
     }
 
     @Override
