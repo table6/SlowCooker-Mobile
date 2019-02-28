@@ -61,11 +61,11 @@ public class CookerStatsFragment extends Fragment {
     private final Runnable runnable = new Runnable() {
         public void run() {
             if (fragmentActive) {
+                handler.postDelayed(runnable, UPDATE_FREQUENCY * 1000);
+
                 for (SlowcookerFragment f : FRAGMENTS) {
                     f.update();
                 }
-
-                handler.postDelayed(runnable, UPDATE_FREQUENCY * 1000);
             }
         }
     };

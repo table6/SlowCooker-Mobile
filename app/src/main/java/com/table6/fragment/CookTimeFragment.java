@@ -2,6 +2,8 @@ package com.table6.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,11 +22,13 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class CookTimeFragment extends Fragment {
+public class CookTimeFragment extends Fragment implements SlowcookerFragment {
 
     private DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
     private String rpiTime;
@@ -33,42 +37,59 @@ public class CookTimeFragment extends Fragment {
 
     public CookTimeFragment() {
         // Required empty public constructor
-//        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
     public static CookTimeFragment newInstance() {
         CookTimeFragment fragment = new CookTimeFragment();
-        Bundle args = new Bundle();
-
-        fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        this.cookTime = (TextView) getActivity().findViewById(R.id.cookTimeFragmentCookTimeTextView);
-
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_cook_time, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        this.cookTime = (TextView) view.findViewById(R.id.cookTimeFragmentCookTimeTextView);
+        update();
     }
 
     public void setCookTime(String x) {
         this.cookTime.setText(x);
     }
 
-    public String convertSecondsToHMmSs(long seconds) {
-        long m = (seconds / 60) % 60;
-        long h = (seconds / (60 * 60)) % 24;
-        return String.format("%d:%02d", h, m);
+    // https://stackoverflow.com/questions/21285161/android-difference-between-two-dates
+    public String printDifference(Date date) {
+        //milliseconds
+        long different = System.currentTimeMillis() - date.getTime();
+
+        long secondsInMilli = 1000;
+        long minutesInMilli = secondsInMilli * 60;
+        long hoursInMilli = minutesInMilli * 60;
+        long daysInMilli = hoursInMilli * 24;
+
+        // Remove days from difference.
+        different = different % daysInMilli;
+
+        long elapsedHours = different / hoursInMilli;
+        different = different % hoursInMilli;
+
+        long elapsedMinutes = different / minutesInMilli;
+        different = different % minutesInMilli;
+
+        return elapsedHours + ":" + elapsedMinutes;
+    }
+
+    @Override
+    public void update() {
+        if(this.cookTime != null) {
+            new RetrieveFeedTask().execute();
+        }
     }
 
     // https://www.tutorialspoint.com/android/android_json_parser.htm
@@ -80,7 +101,7 @@ public class CookTimeFragment extends Fragment {
             StringBuilder sb = new StringBuilder();
 
             try {
-                connection = (HttpURLConnection) new URL("http://192.168.0.186:5000/cook_time").openConnection();
+                connection = (HttpURLConnection) new URL("http://3.18.34.75:5000/cook_time").openConnection();
                 connection.setReadTimeout(15000);
                 connection.setConnectTimeout(15000);
                 connection.connect();
@@ -97,11 +118,19 @@ public class CookTimeFragment extends Fragment {
 
                     // Do something with response.
                     JSONObject json = new JSONObject(sb.toString());
-                    System.out.println(json);
                     System.out.println("\t\tCookTimeFragment: response=" + json);
 
+                    String jsonTime = json.getString("start_time");
+                    String resultTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").parse(jsonTime));
 
-                    rpiTime = json.getString("start_time");
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setCookTime(time);
+                        }
+                    });
+
+                    // 2019-02-27 03:42:22.626722
 
 
                 } else if(responseCode == HttpURLConnection.HTTP_CONFLICT) {
@@ -122,6 +151,8 @@ public class CookTimeFragment extends Fragment {
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
                 e.printStackTrace();
             } finally {
                 connection.disconnect();
