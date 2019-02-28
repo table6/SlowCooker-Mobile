@@ -1,10 +1,6 @@
 package com.table6.fragment;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,30 +16,13 @@ import com.table6.activity.R;
 
 public class CookerStatsFragment extends Fragment {
 
-    private static final String ARG_TEMPERATURE_MODE_PREF = "modePref";
-
-    private String temperatureModePref;
-    private OnFragmentInteractionListener mListener;
-
     public CookerStatsFragment() {
         // Required empty public constructor
     }
 
-    public static CookerStatsFragment newInstance(String modePref) {
+    public static CookerStatsFragment newInstance() {
         CookerStatsFragment fragment = new CookerStatsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_TEMPERATURE_MODE_PREF, modePref);
-        fragment.setArguments(args);
-
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            this.temperatureModePref = getArguments().getString(ARG_TEMPERATURE_MODE_PREF);
-        }
     }
 
     @Override
@@ -57,16 +36,13 @@ public class CookerStatsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        int tempMode = sharedPreferences.getInt(temperatureModePref, 0);
-
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
 
         CookTimeFragment cookTimeFragment = CookTimeFragment.newInstance();
         transaction.add(R.id.cookerStatsContainer, cookTimeFragment);
 
-        TemperatureFragment temperatureFragment = TemperatureFragment.newInstance(this.temperatureModePref);
+        TemperatureFragment temperatureFragment = TemperatureFragment.newInstance();
         transaction.add(R.id.cookerStatsContainer, temperatureFragment);
 
         transaction.commit();
@@ -82,26 +58,5 @@ public class CookerStatsFragment extends Fragment {
                 }
             }
         });
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
     }
 }

@@ -27,50 +27,24 @@ import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class TemperatureFragment extends Fragment implements SlowcookerFragment {
+public class TemperatureFragment extends ServerFeedFragment {
 
     private static final int MODE_FAHRENHEIT = 0;
     private static final int MODE_CELSIUS = 1;
     private static final int MODE_NONE = 2;
-    private static final String ARG_MODE_PREF = "modePref";
     private static final int UPDATE_FREQUENCY = 60;
 
-    private final Handler handler = new Handler();
-
-    private boolean fragmentActive;
-    private String modePref;
     private TextView tempTxt;
     private TextView modeTxt;
 
-    // https://stackoverflow.com/questions/6400846/updating-time-and-date-by-the-second-in-android
-    private final Runnable runnable = new Runnable() {
-        public void run() {
-            if (fragmentActive) {
-                handler.postDelayed(runnable, UPDATE_FREQUENCY * 1000);
-                update();
-            }
-        }
-    };
-
     public TemperatureFragment() {
         // Required empty public constructor
+        super(UPDATE_FREQUENCY);
     }
 
-    public static TemperatureFragment newInstance(String modePref) {
+    public static TemperatureFragment newInstance() {
         TemperatureFragment fragment = new TemperatureFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_MODE_PREF, modePref);
-        fragment.setArguments(args);
-
         return fragment;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if(getArguments() != null) {
-            this.modePref = getArguments().getString(ARG_MODE_PREF);
-        }
     }
 
     @Override
@@ -86,8 +60,6 @@ public class TemperatureFragment extends Fragment implements SlowcookerFragment 
 
         this.tempTxt = view.findViewById(R.id.tempFragmentTempTxt);
         this.modeTxt = view.findViewById(R.id.tempFragmentModeTxt);
-
-        startUpdateThread();
     }
 
     public void setMode(int x) {
@@ -96,17 +68,17 @@ public class TemperatureFragment extends Fragment implements SlowcookerFragment 
         } else if (x == MODE_CELSIUS){
             this.modeTxt.setText("C");
         } else if (x == MODE_NONE) {
-            this.modeTxt.setText("");
+            this.modeTxt.setText(" ");
         }
 
     }
 
     public void setTemperature(String x) {
-        this.tempTxt.setText(String.format(Locale.US, "%.2f", Double.parseDouble(x)));
-    }
-
-    public void setTemperature(Double x) {
-        this.setTemperature(String.format(Locale.US, "%.2f", x));
+        try {
+            this.tempTxt.setText(String.format(Locale.US, "%.1f", Double.parseDouble(x)));
+        } catch (NumberFormatException e) {
+            this.tempTxt.setText(x);
+        }
     }
 
     @Override
@@ -114,11 +86,6 @@ public class TemperatureFragment extends Fragment implements SlowcookerFragment 
         if(this.tempTxt != null && this.modeTxt != null) {
             new RetrieveFeedTask().execute();
         }
-    }
-
-    private void startUpdateThread() {
-        fragmentActive = true;
-        handler.post(runnable);
     }
 
     // https://www.tutorialspoint.com/android/android_json_parser.htm
@@ -149,16 +116,17 @@ public class TemperatureFragment extends Fragment implements SlowcookerFragment 
                     JSONObject json = new JSONObject(sb.toString());
                     final String type = json.getString("type");
                     final String temperature = json.getString("temperature");
+                    final String measurement = json.getString("measurement");
 
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (type.equals("program")) {
+                            if (!type.equals("probe")) {
                                 // Don't show C or F
                                 setMode(MODE_NONE);
 
                             } else {
-                                setMode((type.equals("F") ? MODE_FAHRENHEIT : MODE_CELSIUS));
+                                setMode((measurement.equals("F") ? MODE_FAHRENHEIT : MODE_CELSIUS));
                             }
 
                             setTemperature(temperature);

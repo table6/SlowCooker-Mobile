@@ -29,26 +29,15 @@ import java.util.Date;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class CookTimeFragment extends Fragment implements SlowcookerFragment {
-
-    private TextView cookTime;
-    private boolean fragmentActive;
+public class CookTimeFragment extends ServerFeedFragment {
 
     private static final int UPDATE_FREQUENCY = 60;
-    private final Handler handler = new Handler();
 
-    // https://stackoverflow.com/questions/6400846/updating-time-and-date-by-the-second-in-android
-    private final Runnable runnable = new Runnable() {
-        public void run() {
-        if (fragmentActive) {
-            handler.postDelayed(runnable, UPDATE_FREQUENCY * 1000);
-            update();
-        }
-        }
-    };
+    private TextView cookTime;
 
     public CookTimeFragment() {
         // Required empty public constructor
+        super(UPDATE_FREQUENCY);
     }
 
     public static CookTimeFragment newInstance() {
@@ -68,7 +57,6 @@ public class CookTimeFragment extends Fragment implements SlowcookerFragment {
         super.onViewCreated(view, savedInstanceState);
 
         this.cookTime = (TextView) view.findViewById(R.id.cookTimeFragmentCookTimeTextView);
-        startUpdateThread();
     }
 
     public void setCookTime(String x) {
@@ -92,21 +80,14 @@ public class CookTimeFragment extends Fragment implements SlowcookerFragment {
         different = different % hoursInMilli;
 
         long elapsedMinutes = different / minutesInMilli;
-        different = different % minutesInMilli;
 
         return String.format("%02d:%02d", elapsedHours, elapsedMinutes);
     }
 
-    @Override
     public void update() {
         if(this.cookTime != null) {
             new RetrieveFeedTask().execute();
         }
-    }
-
-    private void startUpdateThread() {
-        fragmentActive = true;
-        handler.post(runnable);
     }
 
     // https://www.tutorialspoint.com/android/android_json_parser.htm
