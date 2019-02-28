@@ -3,9 +3,7 @@ package com.table6.fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,59 +14,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.table6.activity.R;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
-
-import javax.net.ssl.HttpsURLConnection;
-
 public class CookerStatsFragment extends Fragment {
 
-    private static final int TEMPERATURE_MODE_FAHRENHEIT = 0;
-    private static final int TEMPERATURE_MODE_CELSIUS = 1;
     private static final String ARG_TEMPERATURE_MODE_PREF = "modePref";
-    private static final String[] PAGES = {"temperature", "cook_time"};
-    private static final int UPDATE_FREQUENCY = 60;
-    private static final ArrayList<SlowcookerFragment> FRAGMENTS = new ArrayList<>();
 
-    private boolean fragmentActive;
     private String temperatureModePref;
-    private TextView timeTxt;
-    private TextView temperatureTxt;
-    private TextView temperatureModeTxt;
-
     private OnFragmentInteractionListener mListener;
-
-    // https://stackoverflow.com/questions/6400846/updating-time-and-date-by-the-second-in-android
-    private SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
-    private final Handler handler = new Handler();
-
-    private final Runnable runnable = new Runnable() {
-        public void run() {
-            if (fragmentActive) {
-                handler.postDelayed(runnable, UPDATE_FREQUENCY * 1000);
-
-                for (SlowcookerFragment f : FRAGMENTS) {
-                    f.update();
-                }
-            }
-        }
-    };
 
     public CookerStatsFragment() {
         // Required empty public constructor
@@ -80,12 +35,6 @@ public class CookerStatsFragment extends Fragment {
         args.putString(ARG_TEMPERATURE_MODE_PREF, modePref);
         fragment.setArguments(args);
 
-        CookTimeFragment cookTimeFragment = CookTimeFragment.newInstance();
-        FRAGMENTS.add(cookTimeFragment);
-
-        TemperatureFragment temperatureFragment = TemperatureFragment.newInstance(modePref);
-        FRAGMENTS.add(temperatureFragment);
-
         return fragment;
     }
 
@@ -94,8 +43,6 @@ public class CookerStatsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             this.temperatureModePref = getArguments().getString(ARG_TEMPERATURE_MODE_PREF);
-
-
         }
     }
 
@@ -116,21 +63,13 @@ public class CookerStatsFragment extends Fragment {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
 
-        for (SlowcookerFragment f : FRAGMENTS) {
-            transaction.add(R.id.cookerStatsContainer, (Fragment) f);
-        }
+        CookTimeFragment cookTimeFragment = CookTimeFragment.newInstance();
+        transaction.add(R.id.cookerStatsContainer, cookTimeFragment);
 
-//        CookTimeFragment cookTimeFragment = CookTimeFragment.newInstance();
-//        this.FRAGMENTS.add(cookTimeFragment);
-//        transaction.add(R.id.cookerStatsContainer, cookTimeFragment);
-//
-//        TemperatureFragment temperatureFragment = TemperatureFragment.newInstance(this.temperatureModePref);
-//        this.FRAGMENTS.add(temperatureFragment);
-//        transaction.add(R.id.cookerStatsContainer, temperatureFragment);
+        TemperatureFragment temperatureFragment = TemperatureFragment.newInstance(this.temperatureModePref);
+        transaction.add(R.id.cookerStatsContainer, temperatureFragment);
 
         transaction.commit();
-
-//        this.setTemperatureMode(tempMode);
 
         ToggleButton secureLidToggleBtn = (ToggleButton) view.findViewById(R.id.cookerStatsSecureLidToggleBtn);
         secureLidToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -143,8 +82,6 @@ public class CookerStatsFragment extends Fragment {
                 }
             }
         });
-
-        startUpdateThread();
     }
 
     @Override
@@ -167,58 +104,4 @@ public class CookerStatsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
-
-//    public void setTemperatureMode(int x) {
-//        this.temperatureModeTxt.setText((x == 0) ? "F" : "C");
-//        if (x == TEMPERATURE_MODE_FAHRENHEIT) {
-//            this.temperatureModeTxt.setText("F");
-//
-//            double oldTemperature = Double.parseDouble(this.getTemperatureText());
-//            this.setTemperatureText(this.celsiusToFahrenheit(oldTemperature));
-//        } else if (x == TEMPERATURE_MODE_CELSIUS){
-//            this.temperatureModeTxt.setText("C");
-//
-//            double oldTemperature = Double.parseDouble(this.getTemperatureText());
-//            this.setTemperatureText(this.fahrenheitToCelsius(oldTemperature));
-//        }
-//
-//    }
-
-    // TODO: Update once RPi interface is implemented.
-    private String getTime() {
-        return sdf.format(new Date(System.currentTimeMillis()));
-    }
-
-    private void startUpdateThread() {
-        fragmentActive = true;
-        handler.post(runnable);
-    }
-
-    public String getTemperatureMode() {
-        return this.temperatureModeTxt.getText().toString();
-    }
-
-    public void setTemperatureText(String x) {
-        this.temperatureTxt.setText(x);
-    }
-
-    public void setTemperatureText(Double x) {
-        this.setTemperatureText(String.format(Locale.US, "%.2f", x));
-    }
-
-    public String getTemperatureText() {
-        return this.temperatureTxt.getText().toString();
-    }
-
-    public double celsiusToFahrenheit(double x) {
-        return x * 1.8 + 32;
-    }
-
-    public double fahrenheitToCelsius(double x) {
-        return (x - 32) / 1.8;
-    }
-
-
-
-
 }
