@@ -21,11 +21,11 @@ public class SlowCookerView extends AppCompatActivity implements
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        ControlTemperatureFragment controlTemperatureFragment = ControlTemperatureFragment.newInstance();
-        fragmentTransaction.add(R.id.slowCookerViewFragmentContainer, controlTemperatureFragment);
-
         ControlCookTimeFragment controlCookTimeFragment = ControlCookTimeFragment.newInstance();
         fragmentTransaction.add(R.id.slowCookerViewFragmentContainer, controlCookTimeFragment);
+
+        ControlTemperatureFragment controlTemperatureFragment = ControlTemperatureFragment.newInstance();
+        fragmentTransaction.add(R.id.slowCookerViewFragmentContainer, controlTemperatureFragment);
 
         fragmentTransaction.commit();
     }

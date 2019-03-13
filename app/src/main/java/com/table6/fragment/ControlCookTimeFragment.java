@@ -1,6 +1,7 @@
 package com.table6.fragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -46,6 +47,8 @@ public class ControlCookTimeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
+
         controlCookTimeTxt = (TextInputEditText) view.findViewById(R.id.controlCookTimeTxt);
         controlCookTimeTxt.setInputType(InputType.TYPE_CLASS_NUMBER);
         controlCookTimeTxt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -66,10 +69,10 @@ public class ControlCookTimeFragment extends Fragment {
         controlCookTimeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String newTemperature = controlCookTimeTxt.getText().toString();
-                if(!newTemperature.isEmpty()) {
-                    mListener.onControlCookTimeFragmentInteraction(newTemperature);
-                    Toast.makeText(getActivity(), "Setting temperature to " + newTemperature, Toast.LENGTH_LONG ).show();
+                String newTime = controlCookTimeTxt.getText().toString();
+                if(!newTime.isEmpty()) {
+                    mListener.onControlCookTimeFragmentInteraction(newTime);
+                    Toast.makeText(getActivity(), "Setting cook time to " + newTime, Toast.LENGTH_LONG ).show();
                 }
             }
         });

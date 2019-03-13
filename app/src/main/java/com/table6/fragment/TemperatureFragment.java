@@ -1,5 +1,7 @@
 package com.table6.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,7 +40,6 @@ public class TemperatureFragment extends ServerFeedFragment {
     private TextView modeTxt;
 
     public TemperatureFragment() {
-        // Required empty public constructor
         super(UPDATE_FREQUENCY);
     }
 
@@ -71,6 +72,11 @@ public class TemperatureFragment extends ServerFeedFragment {
             this.modeTxt.setText(" ");
         }
 
+        // Write new mode to shared preferences.
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(getString(R.string.preference_file_temperature), x);
+        editor.apply();
     }
 
     public void setTemperature(String x) {

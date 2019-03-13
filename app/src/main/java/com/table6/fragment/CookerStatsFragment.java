@@ -19,18 +19,11 @@ import com.table6.activity.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
-import javax.net.ssl.HttpsURLConnection;
 
 public class CookerStatsFragment extends Fragment {
 
@@ -68,7 +61,6 @@ public class CookerStatsFragment extends Fragment {
         ToggleButton secureLidToggleBtn = (ToggleButton) view.findViewById(R.id.cookerStatsSecureLidToggleBtn);
         secureLidToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // TODO: In any case, run a thread to attempt to secure/unsecure lid
                 if (isChecked) {
                     // The toggle is enabled. Attempt to secure lid.
                     JSONObject json = new JSONObject();
@@ -93,30 +85,33 @@ public class CookerStatsFragment extends Fragment {
     }
 
     // https://www.tutorialspoint.com/android/android_json_parser.htm
-    // https://stackoverflow.com/questions/42767249/android-post-request-with-json
+    // https://stackoverflow.com/questions/21404252/post-request-send-json-data-java-httpurlconnection
     public class RetrieveFeedTask extends AsyncTask<JSONObject, Void, Void> {
 
         @Override
         protected Void doInBackground(JSONObject... jsons) {
             HttpURLConnection connection = null;
-            StringBuilder sb = new StringBuilder();
 
             try {
                 connection = (HttpURLConnection) new URL("http://3.18.34.75:5000/lid_status").openConnection();
-                connection.connect();
 
+                // Configure header.
                 connection.setRequestMethod("POST");
-                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 connection.setRequestProperty("Accept","application/json");
                 connection.setDoOutput(true);
-                connection.setDoInput(true);
+
                 connection.connect();
 
-                DataOutputStream os = new DataOutputStream(connection.getOutputStream());
-                os.writeBytes(URLEncoder.encode(jsons[0].toString(), "UTF-8"));
-
-                os.flush();
+                // Be sure to specify UTF-8 for JSON byte array.
+                OutputStream os = connection.getOutputStream();
+                os.write(jsons[0].toString().getBytes("UTF-8"));
                 os.close();
+
+                int responseCode = connection.getResponseCode();
+
+                System.out.println("CookerStatsFragment: responseCode=" + responseCode);
+
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {

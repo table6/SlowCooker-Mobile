@@ -36,7 +36,6 @@ public class CookTimeFragment extends ServerFeedFragment {
     private TextView cookTime;
 
     public CookTimeFragment() {
-        // Required empty public constructor
         super(UPDATE_FREQUENCY);
     }
 

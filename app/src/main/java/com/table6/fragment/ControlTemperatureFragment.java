@@ -1,6 +1,7 @@
 package com.table6.fragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -46,8 +47,24 @@ public class ControlTemperatureFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Get shared preferences temperature measurement to control and validate input.
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        int tempMode = sharedPreferences.getInt(getString(R.string.preference_file_temperature), 0);
+        switch (tempMode) {
+            case 0:
+            case 1:
+                controlTemperatureTxt.setInputType(InputType.TYPE_CLASS_NUMBER);
+                break;
+            case 2:
+                break;
+            default:
+                break;
+        }
+
         controlTemperatureTxt = (TextInputEditText) view.findViewById(R.id.controlTemperatureTxt);
-        controlTemperatureTxt.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+        // If temperature measurement is "NONE", valid input is [keep warm, medium, high]
+        // Otherwise, fahrenheit range is [140-180] in 5 degree increments and celsius range is [].
         controlTemperatureTxt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {

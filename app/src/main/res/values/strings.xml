@@ -13,6 +13,10 @@
     <!--https://stackoverflow.com/questions/9204303/android-is-it-possible-to-add-a-clickable-link-into-a-string-resource-->
     <string name="github"><a href="https://github.com/jonathondgebhardt/The-Most-ve-er-st-Bestestery-Smartesteresteresteringer-Sloweringer-Cookery">The Most’ve’er’st Bestestery Smartesteresteresteringer Sloweringer Cookery</a></string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="mongo_db_version">v4.0.6</string>
+    <string name="flask_version">v1.0.2</string>
+
+    <string name="preference_file_key">slowcooker</string>
+    <string name="preference_file_temperature">temp_mode</string>
+
 </resources>

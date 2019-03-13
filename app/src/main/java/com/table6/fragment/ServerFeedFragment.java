@@ -29,6 +29,12 @@ public abstract class ServerFeedFragment extends Fragment {
         startUpdateThread();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        fragmentActive = false;
+    }
+
     // https://stackoverflow.com/questions/6400846/updating-time-and-date-by-the-second-in-android
     private final Runnable runnable = new Runnable() {
         public void run() {
