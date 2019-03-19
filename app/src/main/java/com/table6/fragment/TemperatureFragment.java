@@ -75,7 +75,7 @@ public class TemperatureFragment extends ServerFeedFragment {
         // Write new mode to shared preferences.
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(getString(R.string.preference_file_temperature), x);
+        editor.putInt(getString(R.string.preference_file_measurement), x);
         editor.apply();
     }
 
@@ -121,6 +121,12 @@ public class TemperatureFragment extends ServerFeedFragment {
                     // Do something with response.
                     JSONObject json = new JSONObject(sb.toString());
                     final String type = json.getString("type");
+                    // Write new mode to shared preferences.
+                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString(getString(R.string.preference_file_type), type);
+                    editor.apply();
+
                     final String temperature = json.getString("temperature");
                     final String measurement = json.getString("measurement");
 

@@ -1,17 +1,26 @@
 package com.table6.view;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 
 import com.table6.activity.R;
 import com.table6.fragment.ControlCookTimeFragment;
 import com.table6.fragment.ControlTemperatureFragment;
+import com.table6.fragment.ControlTemperatureRadioFragment;
 
-public class SlowCookerView extends AppCompatActivity implements
-        ControlTemperatureFragment.OnControlTemperatureFragmentInteractionListener,
-        ControlCookTimeFragment.OnControlCookTimeFragmentInteractionListener {
+public class SlowCookerView extends AppCompatActivity {
+
+    private ControlCookTimeFragment controlCookTimeFragment;
+    private ControlTemperatureFragment controlTemperatureFragment;
+    private ControlTemperatureRadioFragment controlTemperatureRadioFragment;
+    private Button confirmBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,24 +30,37 @@ public class SlowCookerView extends AppCompatActivity implements
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        ControlCookTimeFragment controlCookTimeFragment = ControlCookTimeFragment.newInstance();
+        controlCookTimeFragment = ControlCookTimeFragment.newInstance();
         fragmentTransaction.add(R.id.slowCookerViewFragmentContainer, controlCookTimeFragment);
 
-        ControlTemperatureFragment controlTemperatureFragment = ControlTemperatureFragment.newInstance();
-        fragmentTransaction.add(R.id.slowCookerViewFragmentContainer, controlTemperatureFragment);
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String type = sharedPreferences.getString(getString(R.string.preference_file_type), "");
+        if (type.equals("probe")) {
+            controlTemperatureFragment = ControlTemperatureFragment.newInstance();
+            fragmentTransaction.add(R.id.slowCookerViewFragmentContainer, controlTemperatureFragment);
+        }
+
+        controlTemperatureRadioFragment = ControlTemperatureRadioFragment.newInstance();
+        fragmentTransaction.add(R.id.slowCookerViewFragmentContainer, controlTemperatureRadioFragment);
 
         fragmentTransaction.commit();
-    }
 
-    @Override
-    public void onControlTemperatureFragmentInteraction(String x) {
-        // TODO: Send temperature to RPi
-        System.out.println("\t\tNew temperature: " + x);
-    }
+        confirmBtn = (Button) findViewById(R.id.slowCookerViewConfirmBtn);
+        confirmBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (controlCookTimeFragment != null) {
+                    System.out.println(controlCookTimeFragment.getCookTime());
+                }
 
-    @Override
-    public void onControlCookTimeFragmentInteraction(String x) {
-        // TODO: Send temperature to RPi
-        System.out.println("\t\tNew time: " + x);
+                if (controlTemperatureFragment!= null) {
+                    System.out.println(controlTemperatureFragment.getTemperature());
+                }
+
+                if (controlTemperatureRadioFragment != null) {
+                    System.out.println(controlTemperatureRadioFragment.getChecked());
+                }
+            }
+        });
     }
 }

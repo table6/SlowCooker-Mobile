@@ -17,6 +17,10 @@
     <string name="flask_version">v1.0.2</string>
 
     <string name="preference_file_key">slowcooker</string>
-    <string name="preference_file_temperature">temp_mode</string>
+    <string name="preference_file_measurement">temp_mode</string>
+    <string name="preference_file_type">type</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
