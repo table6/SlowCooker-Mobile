@@ -63,6 +63,10 @@ public class TemperatureFragment extends ServerFeedFragment {
         this.modeTxt = view.findViewById(R.id.tempFragmentModeTxt);
     }
 
+    /**
+     * Sets the given temperature mode to be displayed in the appropriate TextView.
+     * @param x the mode to be displayed.
+     */
     public void setMode(int x) {
         if (x == MODE_FAHRENHEIT) {
             this.modeTxt.setText("F");
@@ -79,6 +83,10 @@ public class TemperatureFragment extends ServerFeedFragment {
         editor.apply();
     }
 
+    /**
+     * Sets the given temperature to be displayed in the appropriate TextView.
+     * @param x the temperature to be displayed.
+     */
     public void setTemperature(String x) {
         try {
             this.tempTxt.setText(String.format(Locale.US, "%.1f", Double.parseDouble(x)));
@@ -88,7 +96,7 @@ public class TemperatureFragment extends ServerFeedFragment {
     }
 
     @Override
-    public void update() {
+    protected void update() {
         if(this.tempTxt != null && this.modeTxt != null) {
             new RetrieveFeedTask().execute();
         }

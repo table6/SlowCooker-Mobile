@@ -11,11 +11,14 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.table6.activity.R;
 
 public class ControlTemperatureFragment extends Fragment {
+
+    private static final int MODE_FAHRENHEIT = 0;
+    private static final int MODE_CELSIUS = 1;
+    private static final int MODE_NONE = 2;
 
     private TextInputEditText controlTemperatureTxt;
 
@@ -41,38 +44,45 @@ public class ControlTemperatureFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Probe has temperature ranges.
         controlTemperatureTxt = (TextInputEditText) view.findViewById(R.id.controlTemperatureTxt);
         controlTemperatureTxt.setInputType(InputType.TYPE_CLASS_NUMBER);
     }
 
-
+    /**
+     * Gets and validates user input temperature.
+     * @return A formatted temperature string or empty string if input is invalid.
+     */
     public String getTemperature() {
         String result = "";
         if (controlTemperatureTxt != null) {
             SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-            int type = sharedPreferences.getInt(getString(R.string.preference_file_measurement), -1);
+            int type = sharedPreferences.getInt(getString(R.string.preference_file_measurement), MODE_NONE);
 
-            String temperatureText = controlTemperatureTxt.getText().toString();
-            int temperature = Integer.parseInt(temperatureText);
+            try
+            {
+                String temperatureText = controlTemperatureTxt.getText().toString();
+                int temperature = Integer.parseInt(temperatureText);
 
-            if(type == 0) {
-                // Fahrenheit range is [140-180] in 5 degree increments.
-                if(temperature < 140 || temperature > 180 || temperature % 5 != 0) {
-                    // error
-                    Toast.makeText(getContext(), "SlowCooker is set to Fahrenheit, temperature must be between 140 and 180 degrees in 5 degree increments", Toast.LENGTH_LONG).show();
-                } else {
-                    result = temperatureText;
+                if(type == MODE_FAHRENHEIT) {
+                    // Fahrenheit range is [140-180] in 5 degree increments.
+                    if(temperature < 140 || temperature > 180 || temperature % 5 != 0) {
+
+                    } else {
+                        result = temperatureText;
+                    }
+
+                } else if (type == MODE_CELSIUS)  {
+                    // Celsius range is [60-80] in 5 degree increments.
+                    if (temperature < 60 || temperature > 80 || temperature % 5 != 0) {
+
+                    } else {
+                        result = temperatureText;
+                    }
                 }
-
-            } else if (type == 1)  {
-                // Celsius range is [60-80] in 5 degree increments.
-                if (temperature < 60 || temperature > 80 || temperature % 5 != 0) {
-                    // error
-                    Toast.makeText(getContext(), "SlowCooker is set to Celsius, temperature must be between 60 and 80 degrees in 5 degree increments", Toast.LENGTH_LONG).show();
-                } else {
-                    result = temperatureText;
-                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
             }
         }
 

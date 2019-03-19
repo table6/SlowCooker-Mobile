@@ -58,12 +58,22 @@ public class CookTimeFragment extends ServerFeedFragment {
         this.cookTime = (TextView) view.findViewById(R.id.cookTimeFragmentCookTimeTextView);
     }
 
+    /**
+     * Set the cook time of the appropriate TextView.
+     * @param x the cook time to be displayed.
+     */
     public void setCookTime(String x) {
         this.cookTime.setText(x);
     }
 
-    // https://stackoverflow.com/questions/21285161/android-difference-between-two-dates
+    /**
+     * Get the date offset in a HH:MM format.
+     * @param date the UTC date to be used as an offset.
+     * @return a formatted time string in HH:MM format.
+     */
     public String getOffsetFromTime(Date date) {
+        // https://stackoverflow.com/questions/21285161/android-difference-between-two-dates
+
         //milliseconds
         long different = System.currentTimeMillis() - date.getTime();
 
@@ -83,7 +93,11 @@ public class CookTimeFragment extends ServerFeedFragment {
         return String.format("%02d:%02d", elapsedHours, elapsedMinutes);
     }
 
-    public void update() {
+    /**
+     *
+     */
+    @Override
+    protected void update() {
         if(this.cookTime != null) {
             new RetrieveFeedTask().execute();
         }

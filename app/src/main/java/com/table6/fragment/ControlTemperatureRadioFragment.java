@@ -15,14 +15,11 @@ import com.table6.activity.R;
 
 public class ControlTemperatureRadioFragment extends Fragment {
 
-    private final int WARM = 0;
-    private final int LOW = 1;
-    private final int HIGH = 2;
+    private final int HEAT_MODE_WARM = 0;
+    private final int HEAT_MODE_LOW = 1;
+    private final int HEAT_MODE_HIGH = 2;
 
     private RadioGroup controlTemperatureGroup;
-    private RadioButton controlTemperatureGroupWarm;
-    private RadioButton controlTemperatureGroupLow;
-    private RadioButton controlTemperatureGroupHigh;
     private SparseIntArray buttonIdMap;
 
     public ControlTemperatureRadioFragment() {
@@ -47,18 +44,25 @@ public class ControlTemperatureRadioFragment extends Fragment {
         controlTemperatureGroup = (RadioGroup) view.findViewById(R.id.controlTemperatureGroup);
 
         buttonIdMap = new SparseIntArray();
-        controlTemperatureGroupWarm = (RadioButton) view.findViewById(R.id.controlTemperatureGroupWarm);
-        buttonIdMap.append(controlTemperatureGroupWarm.getId(), WARM);
 
-        controlTemperatureGroupLow = (RadioButton) view.findViewById(R.id.controlTemperatureGroupLow);
-        buttonIdMap.append(controlTemperatureGroupLow.getId(), LOW);
+        RadioButton controlTemperatureGroupWarm = (RadioButton) view.findViewById(R.id.controlTemperatureGroupWarm);
+        buttonIdMap.append(controlTemperatureGroupWarm.getId(), HEAT_MODE_WARM);
 
-        controlTemperatureGroupHigh = (RadioButton) view.findViewById(R.id.controlTemperatureGroupHigh);
-        buttonIdMap.append(controlTemperatureGroupHigh.getId(), HIGH);
+        RadioButton controlTemperatureGroupLow = (RadioButton) view.findViewById(R.id.controlTemperatureGroupLow);
+        buttonIdMap.append(controlTemperatureGroupLow.getId(), HEAT_MODE_LOW);
+
+        RadioButton controlTemperatureGroupHigh = (RadioButton) view.findViewById(R.id.controlTemperatureGroupHigh);
+        buttonIdMap.append(controlTemperatureGroupHigh.getId(), HEAT_MODE_HIGH);
     }
 
+    /**
+     * Gets the user selected heating mode.
+     * @return 0 if warm is selected, 1 if low is selected, 2 if high is selected, or -1 if nothing is selected.
+     */
     public int getChecked() {
         int checkedId = controlTemperatureGroup.getCheckedRadioButtonId();
+
+        // checkedId is -1 when nothing is selected.
         return (checkedId != -1 ? buttonIdMap.get(checkedId) : -1);
     }
 }

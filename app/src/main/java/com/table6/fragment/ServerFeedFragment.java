@@ -39,7 +39,7 @@ public abstract class ServerFeedFragment extends Fragment {
         }
     };
 
-    public abstract void update();
+    protected abstract void update();
 
     private void startUpdateThread() {
         fragmentActive = true;

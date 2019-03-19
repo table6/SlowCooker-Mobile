@@ -14,7 +14,8 @@ import com.table6.activity.R;
 
 public class ControlCookTimeFragment extends Fragment {
 
-    private TextInputEditText controlCookTimeTxt;
+    private TextInputEditText controlCookTimeHourTxt;
+    private TextInputEditText controlCookTimeMinuteTxt;
 
     public ControlCookTimeFragment() {
         // Required empty public constructor
@@ -38,15 +39,48 @@ public class ControlCookTimeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        controlCookTimeTxt = (TextInputEditText) view.findViewById(R.id.controlCookTimeTxt);
-        controlCookTimeTxt.setInputType(InputType.TYPE_CLASS_NUMBER);
+        controlCookTimeHourTxt = (TextInputEditText) view.findViewById(R.id.controlCookTimeHourTxt);
+        controlCookTimeHourTxt.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+        controlCookTimeMinuteTxt = (TextInputEditText) view.findViewById(R.id.controlCookTimeMinuteTxt);
+        controlCookTimeMinuteTxt.setInputType(InputType.TYPE_CLASS_NUMBER);
     }
 
+    /**
+     * Gets and validates user input cook time.
+     * @return A formatted cook time string or empty string if input is invalid.
+     */
     public String getCookTime() {
         String result = "";
-        if (controlCookTimeTxt != null) {
-            String cookTimeText = controlCookTimeTxt.getText().toString();
-            String[] tokens = cookTimeText.split(":");
+
+        try {
+            String cookTimeHourText = controlCookTimeHourTxt.getText().toString();
+            int cookTimeHour = Integer.parseInt(cookTimeHourText);
+
+            if (cookTimeHour < 0 || cookTimeHour > 12) {
+
+            } else {
+                result = cookTimeHourText + ":";
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            String cookTimeMinuteText = controlCookTimeMinuteTxt.getText().toString();
+            int cookTimeMinute = Integer.parseInt(cookTimeMinuteText);
+
+            if (cookTimeMinute != 0 && cookTimeMinute != 30) {
+
+            } else {
+                result += cookTimeMinuteText;
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
         }
 
         return result;

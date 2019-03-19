@@ -14,13 +14,15 @@ import com.table6.fragment.ControlCookTimeFragment;
 import com.table6.fragment.ControlTemperatureFragment;
 import com.table6.fragment.ControlTemperatureRadioFragment;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class SlowCookerView extends AppCompatActivity {
 
     private ControlCookTimeFragment controlCookTimeFragment;
     private ControlTemperatureFragment controlTemperatureFragment;
     private ControlTemperatureRadioFragment controlTemperatureRadioFragment;
     private Button confirmBtn;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,15 +52,46 @@ public class SlowCookerView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (controlCookTimeFragment != null) {
-                    System.out.println(controlCookTimeFragment.getCookTime());
+                    String cookTime = controlCookTimeFragment.getCookTime();
+                    if(cookTime.length() > 0) {
+                        JSONObject json = new JSONObject();
+                        try {
+                            json.put("cook_time", cookTime);
+
+                            // Send json to server.
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
 
                 if (controlTemperatureFragment!= null) {
-                    System.out.println(controlTemperatureFragment.getTemperature());
+                    String temperature = controlTemperatureFragment.getTemperature();
+                    if (temperature.length() > 0) {
+                        JSONObject json = new JSONObject();
+                        try {
+                            json.put("temperature", temperature);
+
+                            // Send json to server.
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
 
                 if (controlTemperatureRadioFragment != null) {
                     System.out.println(controlTemperatureRadioFragment.getChecked());
+                    int heatMode = controlTemperatureRadioFragment.getChecked();
+                    if (heatMode > -1) {
+                        JSONObject json = new JSONObject();
+                        try {
+                            json.put("heat_mode", heatMode);
+
+                            // Send json to server.
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
         });
