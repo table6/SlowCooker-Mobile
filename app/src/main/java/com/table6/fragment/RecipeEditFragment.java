@@ -1,7 +1,6 @@
 package com.table6.fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,7 +9,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.table6.activity.R;
 import com.table6.object.RecipeContent;
@@ -31,6 +33,15 @@ public class RecipeEditFragment extends Fragment {
     private String servingSize;
     private String directions;
     private ArrayList<String> ingredients;
+
+    private TextInputEditText titleEditTxt;
+    private TextInputEditText prepTimeEditTxt;
+    private TextInputEditText cookTimeEditTxt;
+    private TextInputEditText servingSizeEditTxt;
+    private TextInputEditText directionsEditTxt;
+    private TextInputEditText ingredientTextEdit;
+    private LinearLayout ingredientsContainer;
+    private ArrayList<TextInputEditText> ingredientTextInputs;
 
     private OnRecipeEditFragmentInteractionListener mListener;
 
@@ -92,27 +103,83 @@ public class RecipeEditFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        TextInputEditText titleEditTxt = (TextInputEditText) view.findViewById(R.id.recipeEditTitleTextInput);
+        titleEditTxt = (TextInputEditText) view.findViewById(R.id.recipeEditTitleTextInput);
         titleEditTxt.setText(this.title);
 
-        TextInputEditText prepTimeEditTxt = (TextInputEditText) view.findViewById(R.id.recipeEditPrepTimeTextInput);
+        prepTimeEditTxt = (TextInputEditText) view.findViewById(R.id.recipeEditPrepTimeTextInput);
         prepTimeEditTxt.setText(this.prepTime);
 
-        TextInputEditText cookTimeEditTxt = (TextInputEditText) view.findViewById(R.id.recipeEditCookTimeTextInput);
+        cookTimeEditTxt = (TextInputEditText) view.findViewById(R.id.recipeEditCookTimeTextInput);
         cookTimeEditTxt.setText(this.cookTime);
 
-        TextInputEditText servingSizeEditTxt = (TextInputEditText) view.findViewById(R.id.recipeEditServingSizeTextInput);
+        servingSizeEditTxt = (TextInputEditText) view.findViewById(R.id.recipeEditServingSizeTextInput);
         servingSizeEditTxt.setText(this.servingSize);
 
-        TextInputEditText directionsEditTxt = (TextInputEditText) view.findViewById(R.id.recipeEditDirectionsTextInput);
+        directionsEditTxt = (TextInputEditText) view.findViewById(R.id.recipeEditDirectionsTextInput);
         directionsEditTxt.setText(this.directions);
 
-        LinearLayout ingredientsContainer = (LinearLayout) view.findViewById(R.id.recipeEditIngredientsContainer);
+        ingredientTextInputs = new ArrayList<>();
+
+        ingredientsContainer = (LinearLayout) view.findViewById(R.id.recipeEditIngredientsContainer);
         for(String ingredient : this.ingredients) {
             TextInputEditText editText = new TextInputEditText(view.getContext());
             editText.setText(ingredient);
             ingredientsContainer.addView(editText);
+            ingredientTextInputs.add(editText);
+
         }
+
+        ingredientTextEdit = view.findViewById(R.id.recipeEditIngredientsEditTxt);
+
+        ImageButton addIngredientBtn = (ImageButton) view.findViewById(R.id.recipeEditAddIngredientBtn);
+        final LinearLayout ingredientContainer = (LinearLayout) view.findViewById(R.id.recipeEditIngredientsContainer);
+        addIngredientBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String ingredient = ingredientTextEdit.getText().toString();
+                if(!ingredient.isEmpty()) {
+                    // Add a new EditText to the container.
+                    TextInputEditText editText = new TextInputEditText(v.getContext());
+                    editText.setText(ingredient);
+                    ingredientTextEdit.setText("");
+                    ingredientContainer.addView(editText);
+
+                    // Add the EditText instead of the contents of the EditText at the time in case the user decides to edit after adding.
+                    ingredientTextInputs.add(editText);
+                } else {
+                    Toast.makeText(getActivity(), "Fill in the ingredient line to add it to the recipe.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        Button cancelBtn = (Button) view.findViewById(R.id.recipeEditCancelBtn);
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+
+        Button confirmBtn = (Button) view.findViewById(R.id.recipeEditConfirmBtn);
+        confirmBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String title = titleEditTxt.getText().toString();
+                String prepTime = prepTimeEditTxt.getText().toString();
+                String cookTime = cookTimeEditTxt.getText().toString();
+                String servingSize = servingSizeEditTxt.getText().toString();
+                String directions = directionsEditTxt.getText().toString();
+
+                ArrayList<String> ingredients = new ArrayList<>();
+                for(TextInputEditText ingredientTxt : ingredientTextInputs) {
+                    ingredients.add(ingredientTxt.getText().toString());
+                }
+
+                mListener.onRecipeEditFragmentInteraction(new RecipeContent.Recipe(title, prepTime, cookTime, servingSize, directions, ingredients));
+
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
 
     }
 
@@ -144,7 +211,6 @@ public class RecipeEditFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnRecipeEditFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onRecipeEditFragmentInteraction(Uri uri);
+        void onRecipeEditFragmentInteraction(RecipeContent.Recipe recipe);
     }
 }

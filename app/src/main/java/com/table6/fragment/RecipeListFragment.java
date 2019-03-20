@@ -70,6 +70,7 @@ public class RecipeListFragment extends Fragment {
 
             recyclerView.setAdapter(new MyRecipeListRecyclerViewAdapter(RecipeContent.ITEMS, mListener));
         }
+
         return view;
     }
 

@@ -29,7 +29,7 @@ import java.util.ArrayList;
  * Use the {@link RecipeDetailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RecipeDetailFragment extends Fragment implements RecipeEditFragment.OnRecipeEditFragmentInteractionListener {
+public class RecipeDetailFragment extends Fragment {
     private static final String ARG_TITLE = "title";
     private static final String ARG_PREP_TIME = "prepTime";
     private static final String ARG_COOK_TIME = "cookTime";
@@ -140,10 +140,7 @@ public class RecipeDetailFragment extends Fragment implements RecipeEditFragment
         recipeEditBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.add(R.id.recipeDetailContainer, RecipeEditFragment.newInstance(title, prepTime, cookTime, servingSize, directions, ingredients));
-                fragmentTransaction.commit();
+                mListener.onRecipeDetailFragmentEditInteraction(new RecipeContent.Recipe(title, prepTime, cookTime, servingSize, directions, ingredients));
             }
         });
 
@@ -152,7 +149,7 @@ public class RecipeDetailFragment extends Fragment implements RecipeEditFragment
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), recipeTitle + " deleted from recipe list", Toast.LENGTH_LONG ).show();
-                mListener.onRecipeDetailFragmentInteraction(recipeTitle);
+                mListener.onRecipeDetailFragmentDeleteInteraction(recipeTitle);
                 getActivity().getSupportFragmentManager().popBackStack();
             }
         });
@@ -175,11 +172,6 @@ public class RecipeDetailFragment extends Fragment implements RecipeEditFragment
         mListener = null;
     }
 
-    @Override
-    public void onRecipeEditFragmentInteraction(Uri uri) {
-
-    }
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -191,6 +183,7 @@ public class RecipeDetailFragment extends Fragment implements RecipeEditFragment
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onRecipeDetailFragmentInteraction(String recipeTitleToRemove);
+        void onRecipeDetailFragmentDeleteInteraction(String recipeTitleToRemove);
+        void onRecipeDetailFragmentEditInteraction(RecipeContent.Recipe recipe);
     }
 }
