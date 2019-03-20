@@ -1,10 +1,13 @@
 package com.table6.fragment;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +29,7 @@ import java.util.ArrayList;
  * Use the {@link RecipeDetailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RecipeDetailFragment extends Fragment {
+public class RecipeDetailFragment extends Fragment implements RecipeEditFragment.OnRecipeEditFragmentInteractionListener {
     private static final String ARG_TITLE = "title";
     private static final String ARG_PREP_TIME = "prepTime";
     private static final String ARG_COOK_TIME = "cookTime";
@@ -133,6 +136,17 @@ public class RecipeDetailFragment extends Fragment {
 
         final String recipeTitle = this.title;
 
+        Button recipeEditBtn = (Button) view.findViewById(R.id.recipeDetailEditBtn);
+        recipeEditBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.add(R.id.recipeDetailContainer, RecipeEditFragment.newInstance(title, prepTime, cookTime, servingSize, directions, ingredients));
+                fragmentTransaction.commit();
+            }
+        });
+
         Button recipeRemoveBtn = (Button) view.findViewById(R.id.recipeDetailRemoveBtn);
         recipeRemoveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,6 +173,11 @@ public class RecipeDetailFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onRecipeEditFragmentInteraction(Uri uri) {
+
     }
 
     /**

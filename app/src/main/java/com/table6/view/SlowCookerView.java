@@ -5,7 +5,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.util.Pair;
+import android.support.v4.util.SimpleArrayMap;
 import android.support.v7.app.AppCompatActivity;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 
@@ -17,12 +20,14 @@ import com.table6.fragment.ControlTemperatureRadioFragment;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 public class SlowCookerView extends AppCompatActivity {
 
     private ControlCookTimeFragment controlCookTimeFragment;
     private ControlTemperatureFragment controlTemperatureFragment;
     private ControlTemperatureRadioFragment controlTemperatureRadioFragment;
-    private Button confirmBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +52,7 @@ public class SlowCookerView extends AppCompatActivity {
 
         fragmentTransaction.commit();
 
-        confirmBtn = (Button) findViewById(R.id.slowCookerViewConfirmBtn);
+        Button confirmBtn = (Button) findViewById(R.id.slowCookerViewConfirmBtn);
         confirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,7 +63,8 @@ public class SlowCookerView extends AppCompatActivity {
                         try {
                             json.put("cook_time", cookTime);
 
-                            // Send json to server.
+                            // send json to server
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -72,7 +78,8 @@ public class SlowCookerView extends AppCompatActivity {
                         try {
                             json.put("temperature", temperature);
 
-                            // Send json to server.
+                            // send json to server
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -80,14 +87,14 @@ public class SlowCookerView extends AppCompatActivity {
                 }
 
                 if (controlTemperatureRadioFragment != null) {
-                    System.out.println(controlTemperatureRadioFragment.getChecked());
-                    int heatMode = controlTemperatureRadioFragment.getChecked();
-                    if (heatMode > -1) {
+                    String heatMode = controlTemperatureRadioFragment.getHeatMode();
+                    if (heatMode.length() > 0) {
                         JSONObject json = new JSONObject();
                         try {
                             json.put("heat_mode", heatMode);
 
-                            // Send json to server.
+                            // send json to server
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

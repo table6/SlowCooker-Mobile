@@ -57,12 +57,30 @@ public class ControlTemperatureRadioFragment extends Fragment {
 
     /**
      * Gets the user selected heating mode.
-     * @return 0 if warm is selected, 1 if low is selected, 2 if high is selected, or -1 if nothing is selected.
+     * @return the user selected mode.
      */
-    public int getChecked() {
-        int checkedId = controlTemperatureGroup.getCheckedRadioButtonId();
+    public String getHeatMode() {
+        String mode = "";
 
-        // checkedId is -1 when nothing is selected.
-        return (checkedId != -1 ? buttonIdMap.get(checkedId) : -1);
+        int buttonId = controlTemperatureGroup.getCheckedRadioButtonId();
+        if(buttonId != -1) {
+            int modeId = buttonIdMap.get(buttonId);
+
+            switch (modeId) {
+                case 0:
+                    mode = "warm";
+                    break;
+                case 1:
+                    mode = "low";
+                    break;
+                case 2:
+                    mode = "high";
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return mode;
     }
 }

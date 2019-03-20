@@ -95,13 +95,13 @@ public class RecipeAddFragment extends Fragment {
             public void onClick(View v) {
                 String ingredient = ingredientTextEdit.getText().toString();
                 if(!ingredient.isEmpty()) {
-                    // Add a new EditText to the container
+                    // Add a new EditText to the container.
                     TextInputEditText editText = new TextInputEditText(v.getContext());
                     editText.setText(ingredient);
                     ingredientTextEdit.setText("");
                     ingredientContainer.addView(editText);
 
-                    // Add the new EditText to the list of ingredient text inputs
+                    // Add the EditText instead of the contents of the EditText at the time in case the user decides to edit after adding.
                     ingredientTextInputs.add(editText);
                 } else {
                     Toast.makeText(getActivity(), "Fill in the ingredient line to add it to the recipe.", Toast.LENGTH_LONG).show();
