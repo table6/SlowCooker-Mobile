@@ -27,10 +27,7 @@ public class ControlTemperatureFragment extends Fragment {
     }
 
     public static ControlTemperatureFragment newInstance() {
-        ControlTemperatureFragment fragment = new ControlTemperatureFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+        return new ControlTemperatureFragment();
     }
 
     @Override
@@ -65,17 +62,12 @@ public class ControlTemperatureFragment extends Fragment {
 
                 if(type == MODE_FAHRENHEIT) {
                     // Fahrenheit range is [140-180] in 5 degree increments.
-                    if(temperature < 140 || temperature > 180 || temperature % 5 != 0) {
-
-                    } else {
+                    if (temperature >= 140 && temperature <= 180 && temperature % 5 == 0) {
                         result = temperatureText;
                     }
-
                 } else if (type == MODE_CELSIUS)  {
                     // Celsius range is [60-80] in 5 degree increments.
-                    if (temperature < 60 || temperature > 80 || temperature % 5 != 0) {
-
-                    } else {
+                    if (temperature >= 60 && temperature <= 80 && temperature % 5 == 0) {
                         result = temperatureText;
                     }
                 }
