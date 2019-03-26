@@ -1,28 +1,21 @@
 package com.table6.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.table6.activity.R;
 
 public class ControlCookTimeFragment extends Fragment {
 
-    private Button controlCookTimeBtn;
-    private TextInputEditText controlCookTimeTxt;
-    private OnControlCookTimeFragmentInteractionListener mListener;
+    private TextInputEditText controlCookTimeHourTxt;
+    private TextInputEditText controlCookTimeMinuteTxt;
 
     public ControlCookTimeFragment() {
         // Required empty public constructor
@@ -46,53 +39,50 @@ public class ControlCookTimeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        controlCookTimeTxt = (TextInputEditText) view.findViewById(R.id.controlCookTimeTxt);
-        controlCookTimeTxt.setInputType(InputType.TYPE_CLASS_NUMBER);
-        controlCookTimeTxt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                String newTime = controlCookTimeTxt.getText().toString();
+        controlCookTimeHourTxt = (TextInputEditText) view.findViewById(R.id.controlCookTimeHourTxt);
+        controlCookTimeHourTxt.setInputType(InputType.TYPE_CLASS_NUMBER);
 
-                if (actionId == EditorInfo.IME_ACTION_DONE && !newTime.isEmpty()) {
-                    mListener.onControlCookTimeFragmentInteraction(newTime);
-                    Toast.makeText(getActivity(), "Setting cook time to " + newTime, Toast.LENGTH_LONG ).show();
-                }
-
-                return false;
-            }
-        });
-
-        controlCookTimeBtn = (Button) view.findViewById(R.id.controlCookTimeBtn);
-        controlCookTimeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String newTemperature = controlCookTimeTxt.getText().toString();
-                if(!newTemperature.isEmpty()) {
-                    mListener.onControlCookTimeFragmentInteraction(newTemperature);
-                    Toast.makeText(getActivity(), "Setting temperature to " + newTemperature, Toast.LENGTH_LONG ).show();
-                }
-            }
-        });
+        controlCookTimeMinuteTxt = (TextInputEditText) view.findViewById(R.id.controlCookTimeMinuteTxt);
+        controlCookTimeMinuteTxt.setInputType(InputType.TYPE_CLASS_NUMBER);
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnControlCookTimeFragmentInteractionListener) {
-            mListener = (OnControlCookTimeFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+    /**
+     * Gets and validates user input cook time.
+     * @return A formatted cook time string or empty string if input is invalid.
+     */
+    public String getCookTime() {
+        String result = "";
+
+        try {
+            String cookTimeHourText = controlCookTimeHourTxt.getText().toString();
+            int cookTimeHour = Integer.parseInt(cookTimeHourText);
+
+            if (cookTimeHour < 0 || cookTimeHour > 12) {
+
+            } else {
+                result = cookTimeHourText + ":";
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
         }
-    }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
+        try {
+            String cookTimeMinuteText = controlCookTimeMinuteTxt.getText().toString();
+            int cookTimeMinute = Integer.parseInt(cookTimeMinuteText);
 
-    public interface OnControlCookTimeFragmentInteractionListener {
-        void onControlCookTimeFragmentInteraction(String x);
+            if (cookTimeMinute != 0 && cookTimeMinute != 30) {
+
+            } else {
+                result += cookTimeMinuteText;
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 }

@@ -133,6 +133,16 @@ public class RecipeContent extends Application {
         ITEM_MAP.remove(recipe.title);
     }
 
+    public static boolean editItem(RecipeContent.Recipe recipe) {
+        if (ITEM_MAP.containsKey(recipe.title)) {
+            removeItem(recipe);
+            addItem(recipe);
+            return true;
+        }
+
+        return false;
+    }
+
     public static class Recipe {
         public final String title;
         public final String prepTime;
@@ -166,6 +176,16 @@ public class RecipeContent extends Application {
             this.servingSize = servingSize;
             this.directions = directions;
             this.ingredients = ingredients;
+        }
+
+        @Override
+        public String toString() {
+            String allIngredients = "";
+            for(String ingredient : this.ingredients) {
+                allIngredients += ", " + ingredient;
+            }
+
+            return this.title + "\n\t" + this.prepTime + ", " + this.cookTime + ", " + this.servingSize + "\n\t" + this.directions + "\n\t" + allIngredients;
         }
 
         @Override

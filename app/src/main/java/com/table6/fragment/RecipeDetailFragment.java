@@ -1,10 +1,13 @@
 package com.table6.fragment;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -133,12 +136,20 @@ public class RecipeDetailFragment extends Fragment {
 
         final String recipeTitle = this.title;
 
+        Button recipeEditBtn = (Button) view.findViewById(R.id.recipeDetailEditBtn);
+        recipeEditBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onRecipeDetailFragmentEditInteraction(new RecipeContent.Recipe(title, prepTime, cookTime, servingSize, directions, ingredients));
+            }
+        });
+
         Button recipeRemoveBtn = (Button) view.findViewById(R.id.recipeDetailRemoveBtn);
         recipeRemoveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), recipeTitle + " deleted from recipe list", Toast.LENGTH_LONG ).show();
-                mListener.onRecipeDetailFragmentInteraction(recipeTitle);
+                mListener.onRecipeDetailFragmentDeleteInteraction(recipeTitle);
                 getActivity().getSupportFragmentManager().popBackStack();
             }
         });
@@ -172,6 +183,7 @@ public class RecipeDetailFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onRecipeDetailFragmentInteraction(String recipeTitleToRemove);
+        void onRecipeDetailFragmentDeleteInteraction(String recipeTitleToRemove);
+        void onRecipeDetailFragmentEditInteraction(RecipeContent.Recipe recipe);
     }
 }
