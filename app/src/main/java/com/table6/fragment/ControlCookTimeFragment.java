@@ -5,10 +5,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.table6.activity.R;
 
@@ -39,11 +41,16 @@ public class ControlCookTimeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        InputFilter[] filterArray = new InputFilter[1];
+        filterArray[0] = new InputFilter.LengthFilter(2);
+
         controlCookTimeHourTxt = (TextInputEditText) view.findViewById(R.id.controlCookTimeHourTxt);
         controlCookTimeHourTxt.setInputType(InputType.TYPE_CLASS_NUMBER);
+        controlCookTimeHourTxt.setFilters(filterArray);
 
         controlCookTimeMinuteTxt = (TextInputEditText) view.findViewById(R.id.controlCookTimeMinuteTxt);
         controlCookTimeMinuteTxt.setInputType(InputType.TYPE_CLASS_NUMBER);
+        controlCookTimeMinuteTxt.setFilters(filterArray);
     }
 
     /**
@@ -55,12 +62,16 @@ public class ControlCookTimeFragment extends Fragment {
 
         try {
             String cookTimeHourText = controlCookTimeHourTxt.getText().toString();
-            int cookTimeHour = Integer.parseInt(cookTimeHourText);
+            if (cookTimeHourText.length() != 0) {
+                int cookTimeHour = Integer.parseInt(cookTimeHourText);
 
-            if (cookTimeHour < 0 || cookTimeHour > 12) {
-
+                if (cookTimeHour >= 0 && cookTimeHour < 10) {
+                    result = "0"+ cookTimeHourText + ":";
+                } else if (cookTimeHour >= 10 && cookTimeHour <= 12) {
+                    result = cookTimeHourText + ":";
+                }
             } else {
-                result = cookTimeHourText + ":";
+                result = "00:";
             }
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -70,17 +81,25 @@ public class ControlCookTimeFragment extends Fragment {
 
         try {
             String cookTimeMinuteText = controlCookTimeMinuteTxt.getText().toString();
-            int cookTimeMinute = Integer.parseInt(cookTimeMinuteText);
+            if (controlCookTimeMinuteTxt.length() != 0) {
+                int cookTimeMinute = Integer.parseInt(cookTimeMinuteText);
 
-            if (cookTimeMinute != 0 && cookTimeMinute != 30) {
-
+                if (cookTimeMinute == 0) {
+                    result += "00";
+                } else if (cookTimeMinute == 30) {
+                    result += "30";
+                }
             } else {
-                result += cookTimeMinuteText;
+                result += "00";
             }
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (NumberFormatException e) {
             e.printStackTrace();
+        }
+
+        if(result.length() != 5) {
+            result = "";
         }
 
         return result;

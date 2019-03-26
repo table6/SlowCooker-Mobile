@@ -1,44 +1,60 @@
-<FrameLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="8dp"
     tools:context="com.table6.fragment.ControlTemperatureFragment">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Cook Mode"
+        android:textSize="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView">
 
         <RadioGroup
+            android:id="@+id/controlTemperatureGroup"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/controlTemperatureGroup">
+            android:layout_height="wrap_content">
 
             <RadioButton
                 android:id="@+id/controlTemperatureGroupWarm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="30dp"
-                android:text="Warm"/>
+                android:text="Warm"
+                android:textSize="20dp" />
 
             <RadioButton
                 android:id="@+id/controlTemperatureGroupLow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="30dp"
-                android:text="Low" />
+                android:text="Low"
+                android:textSize="20dp" />
 
             <RadioButton
                 android:id="@+id/controlTemperatureGroupHigh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="30dp"
-                android:text="High" />
+                android:text="High"
+                android:textSize="20dp" />
 
         </RadioGroup>
 
     </LinearLayout>
 
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>
