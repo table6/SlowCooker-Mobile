@@ -1,5 +1,7 @@
 package com.table6.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,11 +22,15 @@ import com.table6.activity.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class CookerStatsFragment extends Fragment {
 
@@ -60,6 +66,8 @@ public class CookerStatsFragment extends Fragment {
         transaction.commit();
 
         ToggleButton secureLidToggleBtn = (ToggleButton) view.findViewById(R.id.cookerStatsSecureLidToggleBtn);
+        new RetrieveFeedTask().execute();
+
         secureLidToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -67,7 +75,7 @@ public class CookerStatsFragment extends Fragment {
                     JSONObject json = new JSONObject();
                     try {
                         json.put("status", "secure");
-                        new RetrieveFeedTask().execute(json);
+                        new PushFeedTask().execute(json);
                     } catch (JSONException e) {
                         Log.e("", e.getMessage());
                     }
@@ -76,7 +84,7 @@ public class CookerStatsFragment extends Fragment {
                     JSONObject json = new JSONObject();
                     try {
                         json.put("status", "unsecure");
-                        new RetrieveFeedTask().execute(json);
+                        new PushFeedTask().execute(json);
                     } catch (JSONException e) {
                         Log.e("", e.getMessage());
                     }
@@ -87,13 +95,13 @@ public class CookerStatsFragment extends Fragment {
 
     // https://www.tutorialspoint.com/android/android_json_parser.htm
     // https://stackoverflow.com/questions/21404252/post-request-send-json-data-java-httpurlconnection
-    public class RetrieveFeedTask extends AsyncTask<JSONObject, Void, Void> {
+    public class PushFeedTask extends AsyncTask<JSONObject, Void, Void> {
 
         @Override
         protected Void doInBackground(JSONObject... jsons) {
 
             try {
-                HttpURLConnection connection = (HttpURLConnection) new URL(getString(R.string.server_address) + "lid_status").openConnection();
+                HttpURLConnection connection = (HttpURLConnection) new URL(getString(R.string.server_address) + "control_lid_status").openConnection();
 
                 // Configure header.
                 connection.setRequestMethod("POST");
@@ -108,8 +116,17 @@ public class CookerStatsFragment extends Fragment {
                 os.write(jsons[0].toString().getBytes("UTF-8"));
                 os.close();
 
-                int responseCode = connection.getResponseCode();
-
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_CONFLICT) {
+                    // Report failure.
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getActivity().getApplicationContext(),
+                                    "Could not send lid toggle control message",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
             } catch (MalformedURLException e) {
                 Log.e("", e.getMessage());
             } catch (IOException e) {
@@ -123,12 +140,75 @@ public class CookerStatsFragment extends Fragment {
                                 Toast.LENGTH_LONG).show();
                     }
                 });
-
             } catch (Exception e) {
                 Log.e("", e.getMessage());
             }
 
             return null;
+        }
+    }
+
+    public class RetrieveFeedTask extends AsyncTask<Void, Void, JSONObject> {
+        @Override
+        protected JSONObject doInBackground(Void... voids) {
+
+            try {
+                HttpURLConnection connection = (HttpURLConnection) new URL(getString(R.string.server_address) + "lid_status").openConnection();
+                connection.connect();
+
+                int responseCode = connection.getResponseCode();
+                connection.disconnect();
+
+                StringBuilder sb = new StringBuilder();
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+                    String line;
+                    BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+                    while ((line = br.readLine()) != null) {
+                        sb.append(line);
+                    }
+
+                    return new JSONObject(sb.toString());
+                }
+            } catch (MalformedURLException e) {
+                Log.e("", e.getMessage());
+            } catch (IOException e) {
+                Log.e("", e.getMessage());
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                "Could not contact server",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+            } catch (JSONException e) {
+                Log.e("", e.getMessage());
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject json) {
+            super.onPostExecute(json);
+
+            if (json != null) {
+                try {
+                    final String status = json.getString("status");
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToggleButton secureLidToggleBtn = (ToggleButton) getView().findViewById(R.id.cookerStatsSecureLidToggleBtn);
+                            secureLidToggleBtn.setChecked(status.equals("secure"));
+                        }
+                    });
+                } catch (JSONException e) {
+                    Log.e("", e.getMessage());
+                }
+            }
         }
     }
 }

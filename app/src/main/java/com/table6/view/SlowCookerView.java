@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.table6.activity.R;
 import com.table6.fragment.ControlCookTimeFragment;
@@ -130,10 +131,16 @@ public class SlowCookerView extends AppCompatActivity {
                         os.write(feed.getJson().toString().getBytes("UTF-8"));
                         os.close();
 
-                        int responseCode = connection.getResponseCode();
-
-                        if (responseCode == HttpURLConnection.HTTP_CONFLICT) {
+                        if (connection.getResponseCode() == HttpURLConnection.HTTP_CONFLICT) {
                             // Report failure.
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(),
+                                            "Could not send control message",
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            });
                         }
 
                         connection.disconnect();

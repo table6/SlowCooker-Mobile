@@ -103,18 +103,17 @@ public class CookTimeFragment extends ServerFeedFragment {
     }
 
     // https://www.tutorialspoint.com/android/android_json_parser.htm
-    public class RetrieveFeedTask extends AsyncTask<Void, Void, Void> {
+    public class RetrieveFeedTask extends AsyncTask<Void, Void, JSONObject> {
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected JSONObject doInBackground(Void... voids) {
 
             try {
                 HttpURLConnection connection = (HttpURLConnection) new URL(getString(R.string.server_address) + "cook_time").openConnection();
-                connection.setReadTimeout(15000);
-                connection.setConnectTimeout(15000);
                 connection.connect();
 
                 int responseCode = connection.getResponseCode();
+                connection.disconnect();
 
                 StringBuilder sb = new StringBuilder();
                 if (responseCode == HttpsURLConnection.HTTP_OK) {
@@ -125,30 +124,8 @@ public class CookTimeFragment extends ServerFeedFragment {
                         sb.append(line);
                     }
 
-                    JSONObject json = new JSONObject(sb.toString());
-                    String jsonTime = json.getString("start_time");
-
-                    final String resultTime = getOffsetFromTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").parse(jsonTime));
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            setCookTime(resultTime);
-                        }
-                    });
-                } else if(responseCode == HttpURLConnection.HTTP_CONFLICT) {
-                    String line;
-                    BufferedReader br = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-
-                    while ((line = br.readLine()) != null) {
-                        sb.append(line);
-                    }
-
-                    // Report failure.
-
+                    return new JSONObject(sb.toString());
                 }
-
-                connection.disconnect();
-
             } catch (MalformedURLException e) {
                 Log.e("", e.getMessage());
             } catch (IOException e) {
@@ -162,14 +139,34 @@ public class CookTimeFragment extends ServerFeedFragment {
                                 Toast.LENGTH_LONG).show();
                     }
                 });
-
             } catch (JSONException e) {
-                Log.e("", e.getMessage());
-            } catch (ParseException e) {
                 Log.e("", e.getMessage());
             }
 
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject json) {
+            super.onPostExecute(json);
+
+            if (json != null) {
+                try {
+                    String jsonTime = json.getString("start_time");
+
+                    final String resultTime = getOffsetFromTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").parse(jsonTime));
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setCookTime(resultTime);
+                        }
+                    });
+                } catch (JSONException e) {
+                    Log.e("", e.getMessage());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }
