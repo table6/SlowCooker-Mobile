@@ -66,7 +66,7 @@ public class ControlCookTimeFragment extends Fragment {
                 int cookTimeHour = Integer.parseInt(cookTimeHourText);
 
                 if (cookTimeHour >= 0 && cookTimeHour < 10) {
-                    result = "0"+ cookTimeHourText + ":";
+                    result = "0"+ cookTimeHour + ":";
                 } else if (cookTimeHour >= 10 && cookTimeHour <= 12) {
                     result = cookTimeHourText + ":";
                 }
