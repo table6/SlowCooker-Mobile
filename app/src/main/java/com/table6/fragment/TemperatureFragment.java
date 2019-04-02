@@ -111,7 +111,7 @@ public class TemperatureFragment extends ServerFeedFragment {
             StringBuilder sb = new StringBuilder();
 
             try {
-                connection = (HttpURLConnection) new URL("http://3.18.34.75:5000/temperature").openConnection();
+                connection = (HttpURLConnection) new URL(R.string.server_address + "temperature").openConnection();
                 connection.setReadTimeout(15000);
                 connection.setConnectTimeout(15000);
                 connection.connect();
