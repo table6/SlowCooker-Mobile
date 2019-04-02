@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +69,7 @@ public class CookerStatsFragment extends Fragment {
                         json.put("status", "secure");
                         new RetrieveFeedTask().execute(json);
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Log.e("", e.getMessage());
                     }
                 } else {
                     // The toggle is disabled. Attempt to unsecure lid.
@@ -77,7 +78,7 @@ public class CookerStatsFragment extends Fragment {
                         json.put("status", "unsecure");
                         new RetrieveFeedTask().execute(json);
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Log.e("", e.getMessage());
                     }
                 }
             }
@@ -109,12 +110,10 @@ public class CookerStatsFragment extends Fragment {
 
                 int responseCode = connection.getResponseCode();
 
-                System.out.println("CookerStatsFragment: responseCode=" + responseCode);
-
             } catch (MalformedURLException e) {
-                e.printStackTrace();
+                Log.e("", e.getMessage());
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e("", e.getMessage());
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -126,7 +125,7 @@ public class CookerStatsFragment extends Fragment {
                 });
 
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("", e.getMessage());
             }
 
             return null;

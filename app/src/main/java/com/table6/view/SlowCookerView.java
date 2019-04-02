@@ -7,9 +7,9 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.table6.activity.R;
 import com.table6.fragment.ControlCookTimeFragment;
@@ -20,15 +20,11 @@ import com.table6.object.ServerFeed;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import javax.net.ssl.HttpsURLConnection;
 
 public class SlowCookerView extends AppCompatActivity {
 
@@ -52,10 +48,10 @@ public class SlowCookerView extends AppCompatActivity {
         if (type.equals("probe")) {
             controlTemperatureFragment = ControlTemperatureFragment.newInstance();
             fragmentTransaction.add(R.id.slowCookerViewFragmentContainer, controlTemperatureFragment);
+        } else {
+            controlTemperatureRadioFragment = ControlTemperatureRadioFragment.newInstance();
+            fragmentTransaction.add(R.id.slowCookerViewFragmentContainer, controlTemperatureRadioFragment);
         }
-
-        controlTemperatureRadioFragment = ControlTemperatureRadioFragment.newInstance();
-        fragmentTransaction.add(R.id.slowCookerViewFragmentContainer, controlTemperatureRadioFragment);
 
         fragmentTransaction.commit();
 
@@ -73,7 +69,7 @@ public class SlowCookerView extends AppCompatActivity {
                             json.put("start_time", cookTime);
                             cookTimeFeed = new ServerFeed("control_cook_time", json);
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            Log.e("", e.getMessage());
                         }
                     }
                 }
@@ -84,10 +80,12 @@ public class SlowCookerView extends AppCompatActivity {
                     if (temperature.length() > 0) {
                         JSONObject json = new JSONObject();
                         try {
+                            json.put("type", "probe");
                             json.put("temperature", temperature);
+                            json.put("measurement", "F");
                             temperatureFeed = new ServerFeed("control_temperature", json);
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            Log.e("", e.getMessage());
                         }
                     }
                 }
@@ -102,7 +100,7 @@ public class SlowCookerView extends AppCompatActivity {
                             // send json to server
 
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            Log.e("", e.getMessage());
                         }
                     }
                 }
@@ -112,17 +110,14 @@ public class SlowCookerView extends AppCompatActivity {
         });
     }
 
-    // https://www.tutorialspoint.com/android/android_json_parser.htm
     public class PushFeedTask extends AsyncTask<ServerFeed, Void, Void> {
-
         @Override
         protected Void doInBackground(ServerFeed... feeds) {
             for (ServerFeed feed : feeds) {
-                System.out.println("SlowCookerView: feed=" + feed);
-
                 if (feed.getDirectory().length() != 0) {
                     try {
                         HttpURLConnection connection = (HttpURLConnection) new URL(getString(R.string.server_address) + feed.getDirectory()).openConnection();
+
                         connection.setRequestMethod("POST");
                         connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                         connection.setRequestProperty("Accept", "application/json");
@@ -137,37 +132,15 @@ public class SlowCookerView extends AppCompatActivity {
 
                         int responseCode = connection.getResponseCode();
 
-                        StringBuilder sb = new StringBuilder();
-                        if (responseCode == HttpsURLConnection.HTTP_OK) {
-                            String line;
-                            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-                            while ((line = br.readLine()) != null) {
-                                sb.append(line);
-                            }
-
-                            // Report success
-
-                        } else if (responseCode == HttpURLConnection.HTTP_CONFLICT) {
-                            String line;
-                            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-
-                            while ((line = br.readLine()) != null) {
-                                sb.append(line);
-                            }
-
+                        if (responseCode == HttpURLConnection.HTTP_CONFLICT) {
                             // Report failure.
-
                         }
 
                         connection.disconnect();
-
-//                        Thread.sleep(1000);
-
                     } catch (MalformedURLException e) {
-                        e.printStackTrace();
+                        Log.e("", e.getMessage());
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        Log.e("", e.getMessage());
                     }
                 }
 

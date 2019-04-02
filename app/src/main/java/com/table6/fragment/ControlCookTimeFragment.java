@@ -7,10 +7,10 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.table6.activity.R;
 
@@ -74,9 +74,9 @@ public class ControlCookTimeFragment extends Fragment {
                 result = "00:";
             }
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            Log.e("", e.getMessage());
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            Log.e("", e.getMessage());
         }
 
         try {
@@ -93,9 +93,9 @@ public class ControlCookTimeFragment extends Fragment {
                 result += "00";
             }
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            Log.e("", e.getMessage());
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            Log.e("", e.getMessage());
         }
 
         if(result.length() != 5) {

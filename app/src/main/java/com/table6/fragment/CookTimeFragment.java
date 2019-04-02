@@ -2,10 +2,9 @@ package com.table6.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -151,9 +150,9 @@ public class CookTimeFragment extends ServerFeedFragment {
                 connection.disconnect();
 
             } catch (MalformedURLException e) {
-                e.printStackTrace();
+                Log.e("", e.getMessage());
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e("", e.getMessage());
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -165,9 +164,9 @@ public class CookTimeFragment extends ServerFeedFragment {
                 });
 
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.e("", e.getMessage());
             } catch (ParseException e) {
-                e.printStackTrace();
+                Log.e("", e.getMessage());
             }
 
             return null;

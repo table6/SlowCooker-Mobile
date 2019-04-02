@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,9 +73,9 @@ public class ControlTemperatureFragment extends Fragment {
                     }
                 }
             } catch (NullPointerException e) {
-                e.printStackTrace();
+                Log.e("", e.getMessage());
             } catch (NumberFormatException e) {
-                e.printStackTrace();
+                Log.e("", e.getMessage());
             }
         }
 
