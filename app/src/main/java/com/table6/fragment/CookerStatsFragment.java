@@ -90,10 +90,9 @@ public class CookerStatsFragment extends Fragment {
 
         @Override
         protected Void doInBackground(JSONObject... jsons) {
-            HttpURLConnection connection = null;
 
             try {
-                connection = (HttpURLConnection) new URL("http://3.18.34.75:5000/lid_status").openConnection();
+                HttpURLConnection connection = (HttpURLConnection) new URL(getString(R.string.server_address) + "lid_status").openConnection();
 
                 // Configure header.
                 connection.setRequestMethod("POST");
@@ -128,10 +127,6 @@ public class CookerStatsFragment extends Fragment {
 
             } catch (Exception e) {
                 e.printStackTrace();
-            } finally {
-                if(connection != null) {
-                    connection.disconnect();
-                }
             }
 
             return null;

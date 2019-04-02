@@ -107,17 +107,19 @@ public class TemperatureFragment extends ServerFeedFragment {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            HttpURLConnection connection = null;
-            StringBuilder sb = new StringBuilder();
 
             try {
-                connection = (HttpURLConnection) new URL(R.string.server_address + "temperature").openConnection();
+
+                System.out.println("TemperatureFragment: server_address" + getString(R.string.server_address));
+
+                HttpURLConnection connection = (HttpURLConnection) new URL(getString(R.string.server_address) + "temperature").openConnection();
                 connection.setReadTimeout(15000);
                 connection.setConnectTimeout(15000);
                 connection.connect();
 
                 int responseCode = connection.getResponseCode();
 
+                StringBuilder sb = new StringBuilder();
                 if (responseCode == HttpsURLConnection.HTTP_OK) {
                     String line;
                     BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -163,9 +165,10 @@ public class TemperatureFragment extends ServerFeedFragment {
 
                     // Report failure.
 
-                } else {
-                    return null;
                 }
+
+                connection.disconnect();
+
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -182,8 +185,6 @@ public class TemperatureFragment extends ServerFeedFragment {
 
             } catch (JSONException e) {
                 e.printStackTrace();
-            } finally {
-                connection.disconnect();
             }
 
             return null;

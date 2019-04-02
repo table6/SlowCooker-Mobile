@@ -117,19 +117,15 @@ public class SlowCookerView extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(ServerFeed... feeds) {
-            HttpURLConnection connection = null;
-            StringBuilder sb = new StringBuilder();
-
-            for(ServerFeed feed : feeds) {
+            for (ServerFeed feed : feeds) {
                 System.out.println("SlowCookerView: feed=" + feed);
 
                 if (feed.getDirectory().length() != 0) {
                     try {
-                        connection = (HttpURLConnection) new URL(R.string.server_address + feed.getDirectory()).openConnection();
-
+                        HttpURLConnection connection = (HttpURLConnection) new URL(getString(R.string.server_address) + feed.getDirectory()).openConnection();
                         connection.setRequestMethod("POST");
                         connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                        connection.setRequestProperty("Accept","application/json");
+                        connection.setRequestProperty("Accept", "application/json");
                         connection.setDoOutput(true);
 
                         connection.connect();
@@ -141,6 +137,7 @@ public class SlowCookerView extends AppCompatActivity {
 
                         int responseCode = connection.getResponseCode();
 
+                        StringBuilder sb = new StringBuilder();
                         if (responseCode == HttpsURLConnection.HTTP_OK) {
                             String line;
                             BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -151,7 +148,7 @@ public class SlowCookerView extends AppCompatActivity {
 
                             // Report success
 
-                        } else if(responseCode == HttpURLConnection.HTTP_CONFLICT) {
+                        } else if (responseCode == HttpURLConnection.HTTP_CONFLICT) {
                             String line;
                             BufferedReader br = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
 
@@ -163,29 +160,17 @@ public class SlowCookerView extends AppCompatActivity {
 
                         }
 
-                        Thread.sleep(1000);
+                        connection.disconnect();
+
+//                        Thread.sleep(1000);
 
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
-
-//                getActivity().runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        Toast.makeText(getActivity().getApplicationContext(),
-//                                "Could not contact server",
-//                                Toast.LENGTH_LONG).show();
-//                    }
-//                });
-
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } finally {
-                        connection.disconnect();
                     }
-
                 }
+
             }
 
             return null;
