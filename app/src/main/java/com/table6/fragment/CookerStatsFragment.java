@@ -116,7 +116,7 @@ public class CookerStatsFragment extends Fragment {
                 os.write(jsons[0].toString().getBytes("UTF-8"));
                 os.close();
 
-                if (connection.getResponseCode() == HttpURLConnection.HTTP_CONFLICT) {
+                if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                     // Report failure.
                     getActivity().runOnUiThread(new Runnable() {
                         @Override

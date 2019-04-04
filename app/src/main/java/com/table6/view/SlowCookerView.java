@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.table6.activity.R;
+import com.table6.fragment.ControlCookModeRadioFragment;
 import com.table6.fragment.ControlCookTimeFragment;
 import com.table6.fragment.ControlTemperatureFragment;
 import com.table6.fragment.ControlTemperatureRadioFragment;
@@ -30,6 +31,7 @@ import java.net.URL;
 public class SlowCookerView extends AppCompatActivity {
 
     private ControlCookTimeFragment controlCookTimeFragment;
+    private ControlCookModeRadioFragment controlCookModeFragment;
     private ControlTemperatureFragment controlTemperatureFragment;
     private ControlTemperatureRadioFragment controlTemperatureRadioFragment;
 
@@ -40,6 +42,9 @@ public class SlowCookerView extends AppCompatActivity {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        controlCookModeFragment = ControlCookModeRadioFragment.newInstance();
+        fragmentTransaction.add(R.id.slowCookerViewFragmentContainer, controlCookModeFragment);
 
         controlCookTimeFragment = ControlCookTimeFragment.newInstance();
         fragmentTransaction.add(R.id.slowCookerViewFragmentContainer, controlCookTimeFragment);
@@ -96,10 +101,10 @@ public class SlowCookerView extends AppCompatActivity {
                     if (heatMode.length() > 0) {
                         JSONObject json = new JSONObject();
                         try {
-                            json.put("heat_mode", heatMode);
-
-                            // send json to server
-
+                            json.put("type", "manual");
+                            json.put("temperature", heatMode);
+                            json.put("measurement", "N/A");
+                            temperatureFeed = new ServerFeed("control_temperature", json);
                         } catch (JSONException e) {
                             Log.e("", e.getMessage());
                         }
@@ -131,7 +136,7 @@ public class SlowCookerView extends AppCompatActivity {
                         os.write(feed.getJson().toString().getBytes("UTF-8"));
                         os.close();
 
-                        if (connection.getResponseCode() == HttpURLConnection.HTTP_CONFLICT) {
+                        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                             // Report failure.
                             runOnUiThread(new Runnable() {
                                 @Override
