@@ -28,6 +28,8 @@ import java.util.Date;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import static java.util.TimeZone.getTimeZone;
+
 public class CookTimeFragment extends ServerFeedFragment {
 
     private static final int UPDATE_FREQUENCY = 60;
@@ -70,11 +72,16 @@ public class CookTimeFragment extends ServerFeedFragment {
      * @param date the UTC date to be used as an offset.
      * @return a formatted time string in HH:MM format.
      */
-    public String getOffsetFromTime(Date date) {
-        // https://stackoverflow.com/questions/21285161/android-difference-between-two-dates
+    public String getOffsetFromTime(Date date) throws ParseException {
+        // https://stackoverflow.com/questions/308683/how-can-i-get-the-current-date-and-time-in-utc-or-gmt-in-java
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("HH:mm:ss");
+        dateFormatGmt.setTimeZone(getTimeZone("GMT"));
 
+        SimpleDateFormat dateFormatLocal = new SimpleDateFormat("HH:mm:ss");
+
+        // https://stackoverflow.com/questions/21285161/android-difference-between-two-dates
         //milliseconds
-        long different = System.currentTimeMillis() - date.getTime();
+        long different = dateFormatLocal.parse(dateFormatGmt.format(new Date())).getTime() - date.getTime();
 
         long secondsInMilli = 1000;
         long minutesInMilli = secondsInMilli * 60;
@@ -90,6 +97,19 @@ public class CookTimeFragment extends ServerFeedFragment {
         long elapsedMinutes = different / minutesInMilli;
 
         return String.format("%02d:%02d", elapsedHours, elapsedMinutes);
+    }
+
+    public Date getTimeFromJson(String timeStamp) throws ParseException {
+        String[] tokens = timeStamp.split(":");
+
+        String[] hourTokens = tokens[0].split(" ");
+        String hour = hourTokens[hourTokens.length - 1];
+
+        String minute = tokens[1];
+
+        String second = tokens[2].split(" ")[0];
+
+        return new SimpleDateFormat("hh:mm:ss").parse(hour + ":" + minute + ":" + second);
     }
 
     /**
@@ -152,9 +172,8 @@ public class CookTimeFragment extends ServerFeedFragment {
 
             if (json != null) {
                 try {
-                    String jsonTime = json.getString("start_time");
+                    final String resultTime = getOffsetFromTime(getTimeFromJson(json.getString("date")));
 
-                    final String resultTime = getOffsetFromTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").parse(jsonTime));
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -164,7 +183,7 @@ public class CookTimeFragment extends ServerFeedFragment {
                 } catch (JSONException e) {
                     Log.e("", e.getMessage());
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    Log.e("", e.getMessage());
                 }
             }
         }
