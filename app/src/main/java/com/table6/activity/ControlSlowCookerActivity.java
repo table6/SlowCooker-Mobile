@@ -1,30 +1,25 @@
-package com.table6.view;
+package com.table6.activity;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.ArrayMap;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.table6.activity.R;
+import com.table6.fragment.ControlConfirmFragment;
 import com.table6.fragment.ControlCookModeRadioFragment;
 import com.table6.fragment.ControlCookTimeFragment;
 import com.table6.fragment.ControlTemperatureFragment;
 import com.table6.fragment.ControlTemperatureRadioFragment;
 import com.table6.object.ServerFeed;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -32,63 +27,85 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class SlowCookerView extends AppCompatActivity {
+public class ControlSlowCookerActivity extends AppCompatActivity {
 
-    FragmentPagerAdapter fragmentPagerAdapter;
+    private ViewPager viewPager;
+    private FragmentPagerAdapter fragmentPagerAdapter;
+    private Button nextBtn;
+    private Button cancelBtn;
+    private ArrayMap<String, String> userChoices;
 
-    private ControlCookTimeFragment controlCookTimeFragment;
-    private ControlCookModeRadioFragment controlCookModeFragment;
-    private ControlTemperatureFragment controlTemperatureFragment;
-    private ControlTemperatureRadioFragment controlTemperatureRadioFragment;
+    final private int PAGE_COOK_MODE = 0;
+    final private int PAGE_COOK_TIME = 1;
+    final private int PAGE_COOK_TEMP = 2;
+    final private int PAGE_COOK_TEMP_RADIO = 3;
+    final private int PAGE_CONFIRM = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slowcooker_view);
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.slowCookerViewViewPager);
+        userChoices = new ArrayMap<>();
+
+        viewPager = (ViewPager) findViewById(R.id.controlSlowCookerActivityViewPager);
         fragmentPagerAdapter = new SlowCookerPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(fragmentPagerAdapter);
 
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        nextBtn = (Button) findViewById(R.id.controlSlowCookerActivityNextBtn);
+        nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onPageScrolled(int i, float v, int i1) {
+            public void onClick(View v) {
+                int currentItem = viewPager.getCurrentItem();
+                Fragment fragment = fragmentPagerAdapter.getItem(currentItem);
 
-            }
+                int nextItem = currentItem + 1;
 
-            @Override
-            public void onPageSelected(int i) {
-                // Called when the page changes
+                if (fragment instanceof ControlCookModeRadioFragment) {
+                    String cookMode = ((ControlCookModeRadioFragment) fragment).getCookMode();
+                    if (cookMode.equals("probe")) {
+                        nextItem = PAGE_COOK_TEMP;
+                    } else if (cookMode.equals("manual")) {
+                        nextItem = PAGE_COOK_TEMP_RADIO;
+                    }
 
-            }
+                    userChoices.put("Cook mode", cookMode);
 
-            @Override
-            public void onPageScrollStateChanged(int i) {
+                } else if (fragment instanceof ControlCookTimeFragment) {
+                    String cookTime = ((ControlCookTimeFragment) fragment).getCookTime();
+                    userChoices.put("Cook time", cookTime);
 
+                    nextItem = PAGE_CONFIRM;
+                } else if (fragment instanceof ControlTemperatureFragment) {
+                    String temperature = ((ControlTemperatureFragment) fragment).getTemperature();
+                    userChoices.put("Cook temperature", temperature);
+
+                    nextItem = PAGE_CONFIRM;
+                } else if (fragment instanceof ControlTemperatureRadioFragment) {
+                    String temperatureMode = ((ControlTemperatureRadioFragment) fragment).getHeatMode();
+                    userChoices.put("Cook temperature mode", temperatureMode);
+
+                    nextItem = PAGE_CONFIRM;
+                }
+
+                if(nextItem == PAGE_CONFIRM) {
+                    ControlConfirmFragment controlConfirmFragment = (ControlConfirmFragment) fragmentPagerAdapter.getItem(PAGE_CONFIRM);
+                    controlConfirmFragment.populateView(userChoices);
+                }
+
+                viewPager.setCurrentItem((nextItem < fragmentPagerAdapter.getCount() ? nextItem : fragmentPagerAdapter.getCount()));
             }
         });
 
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//
-//        controlCookModeFragment = ControlCookModeRadioFragment.newInstance();
-//        fragmentTransaction.add(R.id.slowCookerViewFragmentContainer, controlCookModeFragment);
-//
-//        controlCookTimeFragment = ControlCookTimeFragment.newInstance();
-//        fragmentTransaction.add(R.id.slowCookerViewFragmentContainer, controlCookTimeFragment);
-//
-//        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-//        String type = sharedPreferences.getString(getString(R.string.preference_file_type), "");
-//        if (type.equals("probe")) {
-//            controlTemperatureFragment = ControlTemperatureFragment.newInstance();
-//            fragmentTransaction.add(R.id.slowCookerViewFragmentContainer, controlTemperatureFragment);
-//        } else {
-//            controlTemperatureRadioFragment = ControlTemperatureRadioFragment.newInstance();
-//            fragmentTransaction.add(R.id.slowCookerViewFragmentContainer, controlTemperatureRadioFragment);
-//        }
-//
-//        fragmentTransaction.commit();
-//
+        cancelBtn = (Button) findViewById(R.id.controlSlowCookerActivityCancelBtn);
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userChoices = new ArrayMap<>();
+                viewPager.setCurrentItem(PAGE_COOK_MODE);
+            }
+        });
+
 //        Button confirmBtn = (Button) findViewById(R.id.slowCookerViewConfirmBtn);
 //        confirmBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -203,32 +220,40 @@ public class SlowCookerView extends AppCompatActivity {
 
     public class SlowCookerPagerAdapter extends FragmentPagerAdapter {
 
-        private int NUM_ITEMS = 4;
-        private int PAGE_COOK_MODE = 0;
-        private int PAGE_COOK_TIME = 1;
-        private int PAGE_COOK_TEMPERATURE = 2;
-        private int PAGE_COOK_TEMPERATURE_RADIO = 3;
+        private SparseArray<Fragment> fragmentMap;
+
+        private int NUM_ITEMS = 5;
 
         public SlowCookerPagerAdapter(FragmentManager fm) {
             super(fm);
+
+            fragmentMap = new SparseArray<>();
+            for(int i = 0; i < NUM_ITEMS; i++) {
+                switch(i) {
+                    case PAGE_COOK_MODE:
+                        fragmentMap.append(i, ControlCookModeRadioFragment.newInstance());
+                        break;
+                    case PAGE_COOK_TIME:
+                        fragmentMap.append(i, ControlCookTimeFragment.newInstance());
+                        break;
+                    case PAGE_COOK_TEMP:
+                        fragmentMap.append(i, ControlTemperatureFragment.newInstance());
+                        break;
+                    case PAGE_COOK_TEMP_RADIO:
+                        fragmentMap.append(i, ControlTemperatureRadioFragment.newInstance());
+                        break;
+                    case PAGE_CONFIRM:
+                        fragmentMap.append(i, ControlConfirmFragment.newInstance());
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
         @Override
         public Fragment getItem(int i) {
-            switch(i) {
-                case 0:
-                    return ControlCookModeRadioFragment.newInstance();
-                case 1:
-                    return ControlCookTimeFragment.newInstance();
-                case 2:
-                    return ControlTemperatureFragment.newInstance();
-                case 3:
-                    return ControlTemperatureRadioFragment.newInstance();
-                default:
-                    break;
-            }
-
-            return null;
+            return fragmentMap.get(i, null);
         }
 
         @Override
