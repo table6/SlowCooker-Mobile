@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.ArrayMap;
 import android.util.Log;
@@ -19,6 +18,7 @@ import com.table6.fragment.ControlCookModeRadioFragment;
 import com.table6.fragment.ControlCookTimeFragment;
 import com.table6.fragment.ControlTemperatureFragment;
 import com.table6.fragment.ControlTemperatureRadioFragment;
+import com.table6.fragment.LockableViewPager;
 import com.table6.object.ServerFeed;
 
 import java.io.IOException;
@@ -29,7 +29,7 @@ import java.net.URL;
 
 public class ControlSlowCookerActivity extends AppCompatActivity {
 
-    private ViewPager viewPager;
+    private LockableViewPager viewPager;
     private FragmentPagerAdapter fragmentPagerAdapter;
     private Button nextBtn;
     private Button cancelBtn;
@@ -48,7 +48,9 @@ public class ControlSlowCookerActivity extends AppCompatActivity {
 
         userChoices = new ArrayMap<>();
 
-        viewPager = (ViewPager) findViewById(R.id.controlSlowCookerActivityViewPager);
+        viewPager = (LockableViewPager) findViewById(R.id.controlSlowCookerActivityViewPager);
+        viewPager.setSwipeable(false);
+
         fragmentPagerAdapter = new SlowCookerPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(fragmentPagerAdapter);
 
@@ -61,31 +63,36 @@ public class ControlSlowCookerActivity extends AppCompatActivity {
 
                 int nextItem = currentItem + 1;
 
-                if (fragment instanceof ControlCookModeRadioFragment) {
-                    String cookMode = ((ControlCookModeRadioFragment) fragment).getCookMode();
-                    if (cookMode.equals("probe")) {
-                        nextItem = PAGE_COOK_TEMP;
-                    } else if (cookMode.equals("manual")) {
-                        nextItem = PAGE_COOK_TEMP_RADIO;
+                if (fragment instanceof ControlConfirmFragment) {
+                    // TODO: Send JSON to server.
+                } else {
+                    if (fragment instanceof ControlCookModeRadioFragment) {
+                        String cookMode = ((ControlCookModeRadioFragment) fragment).getCookMode();
+                        if (cookMode.equals("probe")) {
+                            nextItem = PAGE_COOK_TEMP;
+                        } else if (cookMode.equals("manual")) {
+                            nextItem = PAGE_COOK_TEMP_RADIO;
+                        }
+
+                        userChoices.put("Cook mode", cookMode);
+
+                    } else {
+                        nextItem = PAGE_CONFIRM;
+
+                        // TODO: Should handle when input validation fails
+                        if (fragment instanceof ControlCookTimeFragment) {
+                            String cookTime = ((ControlCookTimeFragment) fragment).getCookTime();
+                            userChoices.put("Cook time", cookTime);
+                        } else if (fragment instanceof ControlTemperatureFragment) {
+                            String temperature = ((ControlTemperatureFragment) fragment).getTemperature();
+                            String temperatureMode = ((ControlTemperatureFragment) fragment).getTemperatureModeString();
+
+                            userChoices.put("Cook temperature", temperature + " " + temperatureMode);
+                        } else if (fragment instanceof ControlTemperatureRadioFragment) {
+                            String temperatureMode = ((ControlTemperatureRadioFragment) fragment).getHeatMode();
+                            userChoices.put("Cook temperature mode", temperatureMode);
+                        }
                     }
-
-                    userChoices.put("Cook mode", cookMode);
-
-                } else if (fragment instanceof ControlCookTimeFragment) {
-                    String cookTime = ((ControlCookTimeFragment) fragment).getCookTime();
-                    userChoices.put("Cook time", cookTime);
-
-                    nextItem = PAGE_CONFIRM;
-                } else if (fragment instanceof ControlTemperatureFragment) {
-                    String temperature = ((ControlTemperatureFragment) fragment).getTemperature();
-                    userChoices.put("Cook temperature", temperature);
-
-                    nextItem = PAGE_CONFIRM;
-                } else if (fragment instanceof ControlTemperatureRadioFragment) {
-                    String temperatureMode = ((ControlTemperatureRadioFragment) fragment).getHeatMode();
-                    userChoices.put("Cook temperature mode", temperatureMode);
-
-                    nextItem = PAGE_CONFIRM;
                 }
 
                 if(nextItem == PAGE_CONFIRM) {
@@ -261,5 +268,4 @@ public class ControlSlowCookerActivity extends AppCompatActivity {
             return NUM_ITEMS;
         }
     }
-
 }
