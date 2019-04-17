@@ -44,14 +44,15 @@ public class ControlCookModeRadioFragment extends Fragment {
 
         controlModeGroup = (RadioGroup) view.findViewById(R.id.controlCookModeGroup);
 
-        RadioButton controlTemperatureGroupWarm = (RadioButton) view.findViewById(R.id.controlCookModeGroupProbe);
-        buttonIdMap.append(controlTemperatureGroupWarm.getId(), COOK_MODE_PROBE);
+        RadioButton cookModeProbeBtn = (RadioButton) view.findViewById(R.id.controlCookModeGroupProbe);
+        buttonIdMap.append(cookModeProbeBtn.getId(), COOK_MODE_PROBE);
+        cookModeProbeBtn.setChecked(true);
 
-        RadioButton controlTemperatureGroupLow = (RadioButton) view.findViewById(R.id.controlCookModeGroupProgram);
-        buttonIdMap.append(controlTemperatureGroupLow.getId(), COOK_MODE_PROGRAM);
+        RadioButton cookModeProgramBtn = (RadioButton) view.findViewById(R.id.controlCookModeGroupProgram);
+        buttonIdMap.append(cookModeProgramBtn.getId(), COOK_MODE_PROGRAM);
 
-        RadioButton controlTemperatureGroupHigh = (RadioButton) view.findViewById(R.id.controlCookModeGroupManual);
-        buttonIdMap.append(controlTemperatureGroupHigh.getId(), COOK_MODE_MANUAL);
+        RadioButton cookModeManualBtn = (RadioButton) view.findViewById(R.id.controlCookModeGroupManual);
+        buttonIdMap.append(cookModeManualBtn.getId(), COOK_MODE_MANUAL);
     }
 
     /**

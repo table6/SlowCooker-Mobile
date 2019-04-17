@@ -11,13 +11,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.table6.activity.R;
 
-public class ControlCookTimeFragment extends Fragment {
+public class ControlCookTimeFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
-    private TextInputEditText controlCookTimeHourTxt;
-    private TextInputEditText controlCookTimeMinuteTxt;
+    private Spinner spinner;
+    private ArrayAdapter<CharSequence> adapter;
+    int userSelection;
 
     public ControlCookTimeFragment() {
         // Required empty public constructor
@@ -41,16 +45,15 @@ public class ControlCookTimeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        InputFilter[] filterArray = new InputFilter[1];
-        filterArray[0] = new InputFilter.LengthFilter(2);
+        spinner = (Spinner) view.findViewById(R.id.controlCookTimeSpinner);
+        adapter = ArrayAdapter.createFromResource(getContext(), R.array.time_choices,
+                android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
 
-        controlCookTimeHourTxt = (TextInputEditText) view.findViewById(R.id.controlCookTimeHourTxt);
-        controlCookTimeHourTxt.setInputType(InputType.TYPE_CLASS_NUMBER);
-        controlCookTimeHourTxt.setFilters(filterArray);
+        spinner.setOnItemSelectedListener(this);
 
-        controlCookTimeMinuteTxt = (TextInputEditText) view.findViewById(R.id.controlCookTimeMinuteTxt);
-        controlCookTimeMinuteTxt.setInputType(InputType.TYPE_CLASS_NUMBER);
-        controlCookTimeMinuteTxt.setFilters(filterArray);
+        userSelection = 0;
     }
 
     /**
@@ -61,47 +64,21 @@ public class ControlCookTimeFragment extends Fragment {
         String result = "";
 
         try {
-            String cookTimeHourText = controlCookTimeHourTxt.getText().toString();
-            if (cookTimeHourText.length() != 0) {
-                int cookTimeHour = Integer.parseInt(cookTimeHourText);
-
-                if (cookTimeHour >= 0 && cookTimeHour < 10) {
-                    result = "0"+ cookTimeHour + ":";
-                } else if (cookTimeHour >= 10 && cookTimeHour <= 12) {
-                    result = cookTimeHourText + ":";
-                }
-            } else {
-                result = "00:";
-            }
+            result = adapter.getItem(userSelection).toString();
         } catch (NullPointerException e) {
             Log.e("", e.getMessage());
-        } catch (NumberFormatException e) {
-            Log.e("", e.getMessage());
-        }
-
-        try {
-            String cookTimeMinuteText = controlCookTimeMinuteTxt.getText().toString();
-            if (controlCookTimeMinuteTxt.length() != 0) {
-                int cookTimeMinute = Integer.parseInt(cookTimeMinuteText);
-
-                if (cookTimeMinute == 0) {
-                    result += "00";
-                } else if (cookTimeMinute == 30) {
-                    result += "30";
-                }
-            } else {
-                result += "00";
-            }
-        } catch (NullPointerException e) {
-            Log.e("", e.getMessage());
-        } catch (NumberFormatException e) {
-            Log.e("", e.getMessage());
-        }
-
-        if(result.length() != 5) {
-            result = "";
         }
 
         return result;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        userSelection = position;
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

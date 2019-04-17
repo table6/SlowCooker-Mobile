@@ -96,11 +96,12 @@ public class ControlSlowCookerActivity extends AppCompatActivity {
                 }
 
                 if(nextItem == PAGE_CONFIRM) {
+                    nextBtn.setText("Submit");
                     ControlConfirmFragment controlConfirmFragment = (ControlConfirmFragment) fragmentPagerAdapter.getItem(PAGE_CONFIRM);
                     controlConfirmFragment.populateView(userChoices);
                 }
 
-                viewPager.setCurrentItem((nextItem < fragmentPagerAdapter.getCount() ? nextItem : fragmentPagerAdapter.getCount()));
+                viewPager.setCurrentItem(nextItem);
             }
         });
 
