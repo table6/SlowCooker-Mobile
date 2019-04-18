@@ -5,25 +5,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.table6.view.SlowCookerView"
+    tools:context=".ControlSlowCookerActivity"
     android:layout_margin="8dp">
 
-    <LinearLayout
-        android:id="@+id/slowCookerViewFragmentContainer"
+    <com.table6.fragment.LockableViewPager
+        android:id="@+id/controlSlowCookerActivityViewPager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/controlSlowCookerActivityNavBtns"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/slowCookerViewConfirmBtn"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/controlSlowCookerActivityNavBtns"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="OK"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:gravity="end"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+            android:id="@+id/controlSlowCookerActivityCancelBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel" />
+
+        <Button
+            android:id="@+id/controlSlowCookerActivityNextBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Next" />
+
+    </LinearLayout>
+
+
 
 </android.support.constraint.ConstraintLayout>

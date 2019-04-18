@@ -33,7 +33,7 @@ public class RecipeListActivity extends AppCompatActivity implements
         fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
 
         RecipeListFragment fragment = RecipeListFragment.newInstance(NUMBER_COLUMNS);
-        fragmentTransaction.add(R.id.fragmentContainer, fragment, "recipeListFragment");
+        fragmentTransaction.add(R.id.fragmentContainer, fragment);
         fragmentTransaction.commit();
 
         fab = (FloatingActionButton) findViewById(R.id.recipeListActivityFab);

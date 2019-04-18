@@ -2,6 +2,7 @@ package com.table6.object;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 import android.util.Xml;
 
 import com.table6.utility.RecipeXmlParser;
@@ -38,11 +39,11 @@ public class RecipeContent extends Application {
         try {
             parsedList = parser.parse(new FileInputStream(new File(context.getFilesDir(), recipeInputFileName)));
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Log.e("", e.getMessage());
         } catch (XmlPullParserException e) {
-            e.printStackTrace();
+            Log.e("", e.getMessage());
         } catch (IOException e ) {
-            e.printStackTrace();
+            Log.e("", e.getMessage());
         }
 
         if (parsedList != null) {
@@ -110,7 +111,7 @@ public class RecipeContent extends Application {
 
             outputStream.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("", e.getMessage());
         }
     }
 

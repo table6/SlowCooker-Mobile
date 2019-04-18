@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="8dp"
-    tools:context="com.table6.fragment.ControlTemperatureFragment">
+    tools:context="com.table6.fragment.ControlCookModeRadioFragment">
 
     <TextView
         android:id="@+id/textView"
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Cook Temperature Mode"
+        android:text="Cook Mode"
         android:textSize="30dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -28,29 +28,29 @@
         app:layout_constraintTop_toBottomOf="@+id/textView">
 
         <RadioGroup
-            android:id="@+id/controlTemperatureGroup"
+            android:id="@+id/controlCookModeGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <RadioButton
-                android:id="@+id/controlTemperatureGroupWarm"
+                android:id="@+id/controlCookModeGroupProbe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Warm"
+                android:text="Probe"
                 android:textSize="20dp" />
 
             <RadioButton
-                android:id="@+id/controlTemperatureGroupLow"
+                android:id="@+id/controlCookModeGroupProgram"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Low"
+                android:text="Program"
                 android:textSize="20dp" />
 
             <RadioButton
-                android:id="@+id/controlTemperatureGroupHigh"
+                android:id="@+id/controlCookModeGroupManual"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="High"
+                android:text="Manual"
                 android:textSize="20dp" />
 
         </RadioGroup>
@@ -58,3 +58,4 @@
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
+

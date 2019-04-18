@@ -2,10 +2,9 @@ package com.table6.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +27,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import static java.util.TimeZone.getTimeZone;
 
 public class CookTimeFragment extends ServerFeedFragment {
 
@@ -71,11 +72,16 @@ public class CookTimeFragment extends ServerFeedFragment {
      * @param date the UTC date to be used as an offset.
      * @return a formatted time string in HH:MM format.
      */
-    public String getOffsetFromTime(Date date) {
-        // https://stackoverflow.com/questions/21285161/android-difference-between-two-dates
+    public String getOffsetFromTime(Date date) throws ParseException {
+        // https://stackoverflow.com/questions/308683/how-can-i-get-the-current-date-and-time-in-utc-or-gmt-in-java
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("HH:mm:ss");
+        dateFormatGmt.setTimeZone(getTimeZone("GMT"));
 
+        SimpleDateFormat dateFormatLocal = new SimpleDateFormat("HH:mm:ss");
+
+        // https://stackoverflow.com/questions/21285161/android-difference-between-two-dates
         //milliseconds
-        long different = System.currentTimeMillis() - date.getTime();
+        long different = dateFormatLocal.parse(dateFormatGmt.format(new Date())).getTime() - date.getTime();
 
         long secondsInMilli = 1000;
         long minutesInMilli = secondsInMilli * 60;
@@ -93,6 +99,19 @@ public class CookTimeFragment extends ServerFeedFragment {
         return String.format("%02d:%02d", elapsedHours, elapsedMinutes);
     }
 
+    public Date getTimeFromJson(String timeStamp) throws ParseException {
+        String[] tokens = timeStamp.split(":");
+
+        String[] hourTokens = tokens[0].split(" ");
+        String hour = hourTokens[hourTokens.length - 1];
+
+        String minute = tokens[1];
+
+        String second = tokens[2].split(" ")[0];
+
+        return new SimpleDateFormat("hh:mm:ss").parse(hour + ":" + minute + ":" + second);
+    }
+
     /**
      *
      */
@@ -104,21 +123,19 @@ public class CookTimeFragment extends ServerFeedFragment {
     }
 
     // https://www.tutorialspoint.com/android/android_json_parser.htm
-    public class RetrieveFeedTask extends AsyncTask<Void, Void, Void> {
+    public class RetrieveFeedTask extends AsyncTask<Void, Void, JSONObject> {
 
         @Override
-        protected Void doInBackground(Void... voids) {
-            HttpURLConnection connection = null;
-            StringBuilder sb = new StringBuilder();
+        protected JSONObject doInBackground(Void... voids) {
 
             try {
-                connection = (HttpURLConnection) new URL("http://3.18.34.75:5000/cook_time").openConnection();
-                connection.setReadTimeout(15000);
-                connection.setConnectTimeout(15000);
+                HttpURLConnection connection = (HttpURLConnection) new URL(getString(R.string.server_address) + "cook_time").openConnection();
                 connection.connect();
 
                 int responseCode = connection.getResponseCode();
+                connection.disconnect();
 
+                StringBuilder sb = new StringBuilder();
                 if (responseCode == HttpsURLConnection.HTTP_OK) {
                     String line;
                     BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -127,33 +144,12 @@ public class CookTimeFragment extends ServerFeedFragment {
                         sb.append(line);
                     }
 
-                    JSONObject json = new JSONObject(sb.toString());
-                    String jsonTime = json.getString("start_time");
-
-                    final String resultTime = getOffsetFromTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").parse(jsonTime));
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            setCookTime(resultTime);
-                        }
-                    });
-                } else if(responseCode == HttpURLConnection.HTTP_CONFLICT) {
-                    String line;
-                    BufferedReader br = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-
-                    while ((line = br.readLine()) != null) {
-                        sb.append(line);
-                    }
-
-                    // Report failure.
-
-                } else {
-                    return null;
+                    return new JSONObject(sb.toString());
                 }
             } catch (MalformedURLException e) {
-                e.printStackTrace();
+                Log.e("", e.getMessage());
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e("", e.getMessage());
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -163,16 +159,33 @@ public class CookTimeFragment extends ServerFeedFragment {
                                 Toast.LENGTH_LONG).show();
                     }
                 });
-
             } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            } finally {
-                connection.disconnect();
+                Log.e("", e.getMessage());
             }
 
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject json) {
+            super.onPostExecute(json);
+
+            if (json != null) {
+                try {
+                    final String resultTime = getOffsetFromTime(getTimeFromJson(json.getString("date")));
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setCookTime(resultTime);
+                        }
+                    });
+                } catch (JSONException e) {
+                    Log.e("", e.getMessage());
+                } catch (ParseException e) {
+                    Log.e("", e.getMessage());
+                }
+            }
         }
     }
 }

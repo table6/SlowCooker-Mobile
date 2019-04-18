@@ -4,10 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,21 +102,18 @@ public class TemperatureFragment extends ServerFeedFragment {
     }
 
     // https://www.tutorialspoint.com/android/android_json_parser.htm
-    public class RetrieveFeedTask extends AsyncTask<Void, Void, Void> {
-
+    public class RetrieveFeedTask extends AsyncTask<Void, Void, JSONObject> {
         @Override
-        protected Void doInBackground(Void... voids) {
-            HttpURLConnection connection = null;
-            StringBuilder sb = new StringBuilder();
+        protected JSONObject doInBackground(Void... voids) {
 
             try {
-                connection = (HttpURLConnection) new URL("http://3.18.34.75:5000/temperature").openConnection();
-                connection.setReadTimeout(15000);
-                connection.setConnectTimeout(15000);
+                HttpURLConnection connection = (HttpURLConnection) new URL(getString(R.string.server_address) + "temperature").openConnection();
                 connection.connect();
 
                 int responseCode = connection.getResponseCode();
+                connection.disconnect();
 
+                StringBuilder sb = new StringBuilder();
                 if (responseCode == HttpsURLConnection.HTTP_OK) {
                     String line;
                     BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -126,10 +122,36 @@ public class TemperatureFragment extends ServerFeedFragment {
                         sb.append(line);
                     }
 
-                    // Do something with response.
-                    JSONObject json = new JSONObject(sb.toString());
+                    return new JSONObject(sb.toString());
+                }
+            } catch (MalformedURLException e) {
+                Log.e("", e.getMessage());
+            } catch (IOException e) {
+                Log.e("", e.getMessage());
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                "Could not contact server",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+            } catch (JSONException e) {
+                Log.e("", e.getMessage());
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject json) {
+            super.onPostExecute(json);
+
+            if (json != null) {
+                try {
                     final String type = json.getString("type");
-                    // Write new mode to shared preferences.
+
                     SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString(getString(R.string.preference_file_type), type);
@@ -152,41 +174,10 @@ public class TemperatureFragment extends ServerFeedFragment {
                             setTemperature(temperature);
                         }
                     });
-
-                } else if(responseCode == HttpURLConnection.HTTP_CONFLICT) {
-                    String line;
-                    BufferedReader br = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-
-                    while ((line = br.readLine()) != null) {
-                        sb.append(line);
-                    }
-
-                    // Report failure.
-
-                } else {
-                    return null;
+                } catch (JSONException e) {
+                    Log.e("", e.getMessage());
                 }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getActivity().getApplicationContext(),
-                                "Could not contact server",
-                                Toast.LENGTH_LONG).show();
-                    }
-                });
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } finally {
-                connection.disconnect();
             }
-
-            return null;
         }
     }
 }

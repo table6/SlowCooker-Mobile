@@ -27,8 +27,7 @@ public class ControlTemperatureRadioFragment extends Fragment {
     }
 
     public static ControlTemperatureRadioFragment newInstance() {
-        ControlTemperatureRadioFragment fragment = new ControlTemperatureRadioFragment();
-        return fragment;
+        return new ControlTemperatureRadioFragment();
     }
 
     @Override
@@ -67,13 +66,13 @@ public class ControlTemperatureRadioFragment extends Fragment {
             int modeId = buttonIdMap.get(buttonId);
 
             switch (modeId) {
-                case 0:
+                case HEAT_MODE_WARM:
                     mode = "warm";
                     break;
-                case 1:
+                case HEAT_MODE_LOW:
                     mode = "low";
                     break;
-                case 2:
+                case HEAT_MODE_HIGH:
                     mode = "high";
                     break;
                 default:
