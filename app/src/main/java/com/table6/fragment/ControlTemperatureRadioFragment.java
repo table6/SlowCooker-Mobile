@@ -46,6 +46,7 @@ public class ControlTemperatureRadioFragment extends Fragment {
 
         RadioButton controlTemperatureGroupWarm = (RadioButton) view.findViewById(R.id.controlTemperatureGroupWarm);
         buttonIdMap.append(controlTemperatureGroupWarm.getId(), HEAT_MODE_WARM);
+        controlTemperatureGroupWarm.setChecked(true);
 
         RadioButton controlTemperatureGroupLow = (RadioButton) view.findViewById(R.id.controlTemperatureGroupLow);
         buttonIdMap.append(controlTemperatureGroupLow.getId(), HEAT_MODE_LOW);

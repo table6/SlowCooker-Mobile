@@ -24,7 +24,7 @@ public class ServerFeed {
         return this.directory;
     }
 
-    public void setJson() {
+    public void setJson(JSONObject json) {
         this.json = json;
     }
 

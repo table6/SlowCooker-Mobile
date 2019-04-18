@@ -8,14 +8,22 @@
     tools:context=".ControlSlowCookerActivity"
     android:layout_margin="8dp">
 
-    <com.table6.fragment.LockableViewPager
-        android:id="@+id/controlSlowCookerActivityViewPager"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/controlSlowCookerActivityContainer"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/controlSlowCookerActivityNavBtns"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.table6.fragment.LockableViewPager
+            android:id="@+id/controlSlowCookerActivityViewPager"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/controlSlowCookerActivityNavBtns"
