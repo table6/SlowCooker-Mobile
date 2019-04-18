@@ -21,6 +21,9 @@ import com.table6.fragment.ControlTemperatureRadioFragment;
 import com.table6.fragment.LockableViewPager;
 import com.table6.object.ServerFeed;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -34,6 +37,8 @@ public class ControlSlowCookerActivity extends AppCompatActivity {
     private Button nextBtn;
     private Button cancelBtn;
     private ArrayMap<String, String> userChoices;
+    private ArrayMap<Integer, String> pageTranslations;
+    private String userSelectedMode;
 
     final private int PAGE_COOK_MODE = 0;
     final private int PAGE_COOK_TIME = 1;
@@ -45,6 +50,12 @@ public class ControlSlowCookerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slowcooker_view);
+
+        pageTranslations = new ArrayMap<>();
+        pageTranslations.put(PAGE_COOK_MODE, "Cook mode");
+        pageTranslations.put(PAGE_COOK_TIME, "Cook time");
+        pageTranslations.put(PAGE_COOK_TEMP, "Cook temperature");
+        pageTranslations.put(PAGE_COOK_TEMP_RADIO, "Cook temperature mode");
 
         userChoices = new ArrayMap<>();
 
@@ -64,33 +75,69 @@ public class ControlSlowCookerActivity extends AppCompatActivity {
                 int nextItem = currentItem + 1;
 
                 if (fragment instanceof ControlConfirmFragment) {
-                    // TODO: Send JSON to server.
+                    try {
+                        JSONObject temperatureJson = new JSONObject();
+                        temperatureJson.put("type", userSelectedMode);
+
+                        if (userSelectedMode.equals("probe")) {
+                            String[] tokens = userChoices.get(pageTranslations.get(PAGE_COOK_TEMP)).split(" ");
+
+                            temperatureJson.put("temperature", tokens[0]);
+                            temperatureJson.put("measurement", tokens[1]);
+                        } else {
+                            temperatureJson.put("temperature", userChoices.get(pageTranslations.get(PAGE_COOK_TEMP_RADIO)));
+                            temperatureJson.put("measurement", "N/A");
+
+                            if (userSelectedMode.equals("program")) {
+                                JSONObject timeJson = new JSONObject();
+                                timeJson.put("start_time", userChoices.get(pageTranslations.get(PAGE_COOK_TIME)));
+
+                                new PushFeedTask().execute(new ServerFeed("control_cook_time", timeJson));
+                            }
+                        }
+
+                        new PushFeedTask().execute(new ServerFeed("control_temperature", temperatureJson));
+
+                        Toast.makeText(getApplicationContext(), "Great success!",
+                                Toast.LENGTH_LONG).show();
+
+                    } catch (JSONException e) {
+                        Log.e("", e.getMessage());
+                    } catch (NullPointerException e) {
+                        Log.e("", e.getMessage());
+                    }
                 } else {
                     if (fragment instanceof ControlCookModeRadioFragment) {
-                        String cookMode = ((ControlCookModeRadioFragment) fragment).getCookMode();
-                        if (cookMode.equals("probe")) {
+                        userSelectedMode = ((ControlCookModeRadioFragment) fragment).getCookMode();
+                        if (userSelectedMode.equals("probe")) {
                             nextItem = PAGE_COOK_TEMP;
-                        } else if (cookMode.equals("manual")) {
+                        } else if (userSelectedMode.equals("manual")) {
                             nextItem = PAGE_COOK_TEMP_RADIO;
                         }
 
-                        userChoices.put("Cook mode", cookMode);
+                        userChoices.put(pageTranslations.get(PAGE_COOK_MODE), userSelectedMode);
 
                     } else {
                         nextItem = PAGE_CONFIRM;
 
-                        // TODO: Should handle when input validation fails
                         if (fragment instanceof ControlCookTimeFragment) {
                             String cookTime = ((ControlCookTimeFragment) fragment).getCookTime();
-                            userChoices.put("Cook time", cookTime);
+
+                            userChoices.put(pageTranslations.get(PAGE_COOK_TIME), cookTime);
+
+                            if (userSelectedMode.equals("program")) {
+                                nextItem = PAGE_COOK_TEMP_RADIO;
+                            }
+
                         } else if (fragment instanceof ControlTemperatureFragment) {
                             String temperature = ((ControlTemperatureFragment) fragment).getTemperature();
                             String temperatureMode = ((ControlTemperatureFragment) fragment).getTemperatureModeString();
 
-                            userChoices.put("Cook temperature", temperature + " " + temperatureMode);
+                            userChoices.put(pageTranslations.get(PAGE_COOK_TEMP), temperature + " " + temperatureMode);
                         } else if (fragment instanceof ControlTemperatureRadioFragment) {
                             String temperatureMode = ((ControlTemperatureRadioFragment) fragment).getHeatMode();
-                            userChoices.put("Cook temperature mode", temperatureMode);
+
+                            userChoices.put(pageTranslations.get(PAGE_COOK_TEMP_RADIO), temperatureMode);
                         }
                     }
                 }
@@ -109,75 +156,14 @@ public class ControlSlowCookerActivity extends AppCompatActivity {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                nextBtn.setText("Next");
                 userChoices = new ArrayMap<>();
                 viewPager.setCurrentItem(PAGE_COOK_MODE);
+
+                ControlConfirmFragment controlConfirmFragment = (ControlConfirmFragment) fragmentPagerAdapter.getItem(PAGE_CONFIRM);
+                controlConfirmFragment.populateView(userChoices);
             }
         });
-
-//        Button confirmBtn = (Button) findViewById(R.id.slowCookerViewConfirmBtn);
-//        confirmBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                ServerFeed cookTimeFeed = new ServerFeed();
-//                if (controlCookTimeFragment != null) {
-//                    String cookTime = controlCookTimeFragment.getCookTime();
-//                    if(cookTime.length() > 0) {
-//                        JSONObject json = new JSONObject();
-//                        try {
-//                            json.put("start_time", cookTime);
-//                            cookTimeFeed = new ServerFeed("control_cook_time", json);
-//                        } catch (JSONException e) {
-//                            Log.e("", e.getMessage());
-//                        }
-//                    }
-//                }
-//
-//                ServerFeed temperatureFeed = new ServerFeed();
-//                if (controlTemperatureFragment != null) {
-//                    String temperature = controlTemperatureFragment.getTemperature();
-//                    if (temperature.length() > 0) {
-//                        JSONObject json = new JSONObject();
-//                        try {
-//                            json.put("type", "probe");
-//                            json.put("temperature", temperature);
-//                            json.put("measurement", "F");
-//                            temperatureFeed = new ServerFeed("control_temperature", json);
-//                        } catch (JSONException e) {
-//                            Log.e("", e.getMessage());
-//                        }
-//                    }
-//                } else if (controlTemperatureRadioFragment != null) {
-//                    String heatMode = controlTemperatureRadioFragment.getHeatMode();
-//                    if (heatMode.length() > 0) {
-//                        JSONObject json = new JSONObject();
-//                        try {
-//                            json.put("type", "manual");
-//                            json.put("temperature", heatMode);
-//                            json.put("measurement", "N/A");
-//                            temperatureFeed = new ServerFeed("control_temperature", json);
-//                        } catch (JSONException e) {
-//                            Log.e("", e.getMessage());
-//                        }
-//                    }
-//                }
-//
-//                if (controlCookModeFragment != null) {
-//                    String heatMode = controlTemperatureRadioFragment.getHeatMode();
-//                    if (heatMode.length() > 0) {
-//                        JSONObject json = temperatureFeed.getJson();
-//                        try {
-//                            json.put("type", "manual");
-//                            temperatureFeed = new ServerFeed("control_temperature", json);
-//                        } catch (JSONException e) {
-//                            Log.e("", e.getMessage());
-//                        }
-//                    }
-//                }
-//
-//                new PushFeedTask().execute(cookTimeFeed, temperatureFeed);
-//            }
-//        });
     }
 
     public class PushFeedTask extends AsyncTask<ServerFeed, Void, Void> {

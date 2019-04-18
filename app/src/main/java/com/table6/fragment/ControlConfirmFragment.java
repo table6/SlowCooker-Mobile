@@ -55,4 +55,8 @@ public class ControlConfirmFragment extends Fragment {
     public void populateView(ArrayMap<String, String> userChoices) {
         this.items = userChoices;
     }
+
+    public void cleanView() {
+        this.items = new ArrayMap<>();
+    }
 }
