@@ -14,7 +14,6 @@ import android.view.MenuItem;
 
 import com.table6.fragment.CookerStatsFragment;
 import com.table6.view.HelpView;
-import com.table6.view.SlowCookerView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -62,7 +61,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_recipes) {
             startActivity(new Intent(MainActivity.this, RecipeListActivity.class));
         } else if (id == R.id.nav_manageSlowCooker) {
-            startActivity(new Intent(MainActivity.this, SlowCookerView.class));
+            startActivity(new Intent(MainActivity.this, ControlSlowCookerActivity.class));
         } else if (id == R.id.nav_help) {
             startActivity(new Intent(MainActivity.this, HelpView.class));
         }

@@ -1,27 +1,32 @@
 package com.table6.fragment;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
-import android.text.InputType;
 import android.util.Log;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
 
 import com.table6.activity.R;
 
-public class ControlTemperatureFragment extends Fragment {
+public class ControlTemperatureFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private static final int MODE_FAHRENHEIT = 0;
     private static final int MODE_CELSIUS = 1;
-    private static final int MODE_NONE = 2;
 
-    private TextInputEditText controlTemperatureTxt;
+    private RadioGroup controlTemperatureModeGroup;
+    private SparseIntArray buttonIdMap;
+    private Spinner spinner;
+    private ArrayAdapter<CharSequence> adapter;
+    private int userSelection;
 
     public ControlTemperatureFragment() {
         // Required empty public constructor
@@ -42,8 +47,71 @@ public class ControlTemperatureFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        controlTemperatureTxt = (TextInputEditText) view.findViewById(R.id.controlTemperatureTxt);
-        controlTemperatureTxt.setInputType(InputType.TYPE_CLASS_NUMBER);
+        spinner = (Spinner) view.findViewById(R.id.controlTemperatureSpinner);
+        adapter = ArrayAdapter.createFromResource(getContext(), R.array.fahrenheit_choices,
+                android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(this);
+
+        userSelection = 0;
+
+        controlTemperatureModeGroup = (RadioGroup) view.findViewById(R.id.controlTemperatureModeGroup);
+
+        buttonIdMap = new SparseIntArray();
+
+        RadioButton temperatureModeFahrenheit = (RadioButton) view.findViewById(R.id.controlTemperatureModeFahrenheit);
+        buttonIdMap.append(temperatureModeFahrenheit.getId(), MODE_FAHRENHEIT);
+        temperatureModeFahrenheit.setChecked(true);
+
+        RadioButton temperatureModeCelsius = (RadioButton) view.findViewById(R.id.controlTemperatureModeCelsius);
+        buttonIdMap.append(temperatureModeCelsius.getId(), MODE_CELSIUS);
+
+        controlTemperatureModeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if(buttonIdMap.get(checkedId) == MODE_FAHRENHEIT) {
+                    adapter = ArrayAdapter.createFromResource(getContext(), R.array.fahrenheit_choices,
+                            android.R.layout.simple_spinner_item);
+
+                } else {
+                    adapter = ArrayAdapter.createFromResource(getContext(), R.array.celsius_choices,
+                            android.R.layout.simple_spinner_item);
+                }
+
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(adapter);
+            }
+        });
+    }
+
+    public int getTemperatureMode() {
+        int buttonId = controlTemperatureModeGroup.getCheckedRadioButtonId();
+
+        return (buttonId != -1 ? buttonIdMap.get(buttonId) : -1);
+    }
+
+    public String getTemperatureModeString() {
+        String mode = "";
+
+        int buttonId = controlTemperatureModeGroup.getCheckedRadioButtonId();
+        if(buttonId != -1) {
+            int modeId = buttonIdMap.get(buttonId);
+
+            switch (modeId) {
+                case MODE_FAHRENHEIT:
+                    mode = "F";
+                    break;
+                case MODE_CELSIUS:
+                    mode = "C";
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return mode;
     }
 
     /**
@@ -52,33 +120,24 @@ public class ControlTemperatureFragment extends Fragment {
      */
     public String getTemperature() {
         String result = "";
-        if (controlTemperatureTxt != null) {
-            SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-            int type = sharedPreferences.getInt(getString(R.string.preference_file_measurement), MODE_NONE);
 
-            try
-            {
-                String temperatureText = controlTemperatureTxt.getText().toString();
-                int temperature = Integer.parseInt(temperatureText);
-
-                if(type == MODE_FAHRENHEIT) {
-                    // Fahrenheit range is [140-180] in 5 degree increments.
-                    if (temperature >= 140 && temperature <= 180 && temperature % 5 == 0) {
-                        result = temperatureText;
-                    }
-                } else if (type == MODE_CELSIUS)  {
-                    // Celsius range is [60-80] in 5 degree increments.
-                    if (temperature >= 60 && temperature <= 80 && temperature % 5 == 0) {
-                        result = temperatureText;
-                    }
-                }
-            } catch (NullPointerException e) {
-                Log.e("", e.getMessage());
-            } catch (NumberFormatException e) {
-                Log.e("", e.getMessage());
-            }
+        try
+        {
+            result = adapter.getItem(userSelection).toString();
+        } catch (NullPointerException e) {
+            Log.e("", e.getMessage());
         }
 
         return result;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        userSelection = position;
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

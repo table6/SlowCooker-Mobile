@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name="com.table6.view.SlowCookerView" />
+        <activity android:name=".ControlSlowCookerActivity" />
         <activity android:name=".RecipeListActivity" />
         <activity android:name="com.table6.view.HelpView" />
         <activity

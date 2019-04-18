@@ -1,7 +1,5 @@
 package com.table6.fragment;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,6 +14,7 @@ import android.widget.RadioGroup;
 import com.table6.activity.R;
 
 public class ControlCookModeRadioFragment extends Fragment {
+
     private final int COOK_MODE_PROBE = 0;
     private final int COOK_MODE_PROGRAM = 1;
     private final int COOK_MODE_MANUAL = 2;
@@ -25,6 +24,7 @@ public class ControlCookModeRadioFragment extends Fragment {
 
     public ControlCookModeRadioFragment() {
         // Required empty public constructor
+        buttonIdMap = new SparseIntArray();
     }
 
     public static ControlCookModeRadioFragment newInstance() {
@@ -42,18 +42,17 @@ public class ControlCookModeRadioFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        controlModeGroup = (RadioGroup) view.findViewById(R.id.controlTemperatureGroup);
+        controlModeGroup = (RadioGroup) view.findViewById(R.id.controlCookModeGroup);
 
-        buttonIdMap = new SparseIntArray();
+        RadioButton cookModeProbeBtn = (RadioButton) view.findViewById(R.id.controlCookModeGroupProbe);
+        buttonIdMap.append(cookModeProbeBtn.getId(), COOK_MODE_PROBE);
+        cookModeProbeBtn.setChecked(true);
 
-        RadioButton controlTemperatureGroupWarm = (RadioButton) view.findViewById(R.id.controlCookModeGroupProbe);
-        buttonIdMap.append(controlTemperatureGroupWarm.getId(), COOK_MODE_PROBE);
+        RadioButton cookModeProgramBtn = (RadioButton) view.findViewById(R.id.controlCookModeGroupProgram);
+        buttonIdMap.append(cookModeProgramBtn.getId(), COOK_MODE_PROGRAM);
 
-        RadioButton controlTemperatureGroupLow = (RadioButton) view.findViewById(R.id.controlCookModeGroupProgram);
-        buttonIdMap.append(controlTemperatureGroupLow.getId(), COOK_MODE_PROGRAM);
-
-        RadioButton controlTemperatureGroupHigh = (RadioButton) view.findViewById(R.id.controlCookModeGroupManual);
-        buttonIdMap.append(controlTemperatureGroupHigh.getId(), COOK_MODE_MANUAL);
+        RadioButton cookModeManualBtn = (RadioButton) view.findViewById(R.id.controlCookModeGroupManual);
+        buttonIdMap.append(cookModeManualBtn.getId(), COOK_MODE_MANUAL);
     }
 
     /**
@@ -63,22 +62,24 @@ public class ControlCookModeRadioFragment extends Fragment {
     public String getCookMode() {
         String mode = "";
 
-        int buttonId = controlModeGroup.getCheckedRadioButtonId();
-        if(buttonId != -1) {
-            int modeId = buttonIdMap.get(buttonId);
+        if (controlModeGroup != null) {
+            int buttonId = controlModeGroup.getCheckedRadioButtonId();
+            if (buttonId != -1) {
+                int modeId = buttonIdMap.get(buttonId);
 
-            switch (modeId) {
-                case COOK_MODE_PROBE:
-                    mode = "probe";
-                    break;
-                case COOK_MODE_PROGRAM:
-                    mode = "program";
-                    break;
-                case COOK_MODE_MANUAL:
-                    mode = "manual";
-                    break;
-                default:
-                    break;
+                switch (modeId) {
+                    case COOK_MODE_PROBE:
+                        mode = "probe";
+                        break;
+                    case COOK_MODE_PROGRAM:
+                        mode = "program";
+                        break;
+                    case COOK_MODE_MANUAL:
+                        mode = "manual";
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
