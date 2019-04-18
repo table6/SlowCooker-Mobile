@@ -2,9 +2,11 @@ package com.table6.activity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.ArrayMap;
 import android.util.Log;
@@ -98,8 +100,7 @@ public class ControlSlowCookerActivity extends AppCompatActivity {
 
                         new PushFeedTask().execute(new ServerFeed("control_temperature", temperatureJson));
 
-                        Toast.makeText(getApplicationContext(), "Great success!",
-                                Toast.LENGTH_LONG).show();
+                        onBackPressed();
 
                     } catch (JSONException e) {
                         Log.e("", e.getMessage());
@@ -146,6 +147,9 @@ public class ControlSlowCookerActivity extends AppCompatActivity {
                     nextBtn.setText("Submit");
                     ControlConfirmFragment controlConfirmFragment = (ControlConfirmFragment) fragmentPagerAdapter.getItem(PAGE_CONFIRM);
                     controlConfirmFragment.populateView(userChoices);
+
+                    // http://www.tothenew.com/blog/updating-viewpager-with-new-data-dynamically/
+                    fragmentPagerAdapter.notifyDataSetChanged();
                 }
 
                 viewPager.setCurrentItem(nextItem);
@@ -186,23 +190,29 @@ public class ControlSlowCookerActivity extends AppCompatActivity {
                         os.write(feed.getJson().toString().getBytes("UTF-8"));
                         os.close();
 
-                        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                            // Report failure.
+                        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     Toast.makeText(getApplicationContext(),
-                                            "Could not send control message",
+                                            "Control message sent to server",
                                             Toast.LENGTH_LONG).show();
                                 }
                             });
                         }
 
                         connection.disconnect();
-                    } catch (MalformedURLException e) {
+                    } catch (Exception e) {
                         Log.e("", e.getMessage());
-                    } catch (IOException e) {
-                        Log.e("", e.getMessage());
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getApplicationContext(),
+                                        "Could not send control message",
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        });
                     }
                 }
 
@@ -253,6 +263,12 @@ public class ControlSlowCookerActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             return NUM_ITEMS;
+        }
+
+        // http://www.tothenew.com/blog/updating-viewpager-with-new-data-dynamically/
+        @Override
+        public int getItemPosition(@NonNull Object object) {
+            return POSITION_NONE;
         }
     }
 }
