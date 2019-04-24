@@ -32,7 +32,7 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class CookerStatsFragment extends Fragment {
+public class CookerStatsFragment extends ServerFeedFragment {
 
     public CookerStatsFragment() {
         // Required empty public constructor
@@ -91,6 +91,11 @@ public class CookerStatsFragment extends Fragment {
                 }
             }
         });
+    }
+
+    @Override
+    protected void update() {
+        new RetrieveFeedTask().execute();
     }
 
     // https://www.tutorialspoint.com/android/android_json_parser.htm

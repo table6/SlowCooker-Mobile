@@ -15,7 +15,7 @@ public abstract class ServerFeedFragment extends Fragment {
     private final Handler handler = new Handler();
 
     public ServerFeedFragment() {
-        this.updateFrequency = 60;
+        this.updateFrequency = 10;
     }
 
     public ServerFeedFragment(int updateFrequency) {

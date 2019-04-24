@@ -33,13 +33,12 @@ public class TemperatureFragment extends ServerFeedFragment {
     private static final int MODE_FAHRENHEIT = 0;
     private static final int MODE_CELSIUS = 1;
     private static final int MODE_NONE = 2;
-    private static final int UPDATE_FREQUENCY = 60;
 
     private TextView tempTxt;
     private TextView modeTxt;
 
     public TemperatureFragment() {
-        super(UPDATE_FREQUENCY);
+
     }
 
     public static TemperatureFragment newInstance() {

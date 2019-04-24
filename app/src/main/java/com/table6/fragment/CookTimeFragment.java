@@ -32,12 +32,10 @@ import static java.util.TimeZone.getTimeZone;
 
 public class CookTimeFragment extends ServerFeedFragment {
 
-    private static final int UPDATE_FREQUENCY = 60;
-
     private TextView cookTime;
 
     public CookTimeFragment() {
-        super(UPDATE_FREQUENCY);
+
     }
 
     public static CookTimeFragment newInstance() {
