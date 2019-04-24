@@ -1,5 +1,7 @@
 package com.table6.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -116,72 +118,37 @@ public class CookTimeFragment extends ServerFeedFragment {
     @Override
     protected void update() {
         if(this.cookTime != null) {
-            new RetrieveFeedTask().execute();
-        }
-    }
+            boolean isDone = false;
 
-    // https://www.tutorialspoint.com/android/android_json_parser.htm
-    public class RetrieveFeedTask extends AsyncTask<Void, Void, JSONObject> {
+            SharedPreferences sharedPref = getContext().getSharedPreferences("", Context.MODE_PRIVATE);
 
-        @Override
-        protected JSONObject doInBackground(Void... voids) {
-
-            try {
-                HttpURLConnection connection = (HttpURLConnection) new URL(getString(R.string.server_address) + "cook_time").openConnection();
-                connection.connect();
-
-                int responseCode = connection.getResponseCode();
-                connection.disconnect();
-
-                StringBuilder sb = new StringBuilder();
-                if (responseCode == HttpsURLConnection.HTTP_OK) {
-                    String line;
-                    BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-                    while ((line = br.readLine()) != null) {
-                        sb.append(line);
-                    }
-
-                    return new JSONObject(sb.toString());
-                }
-            } catch (MalformedURLException e) {
-                Log.e("", e.getMessage());
-            } catch (IOException e) {
-                Log.e("", e.getMessage());
-
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getActivity().getApplicationContext(),
-                                "Could not contact server",
-                                Toast.LENGTH_LONG).show();
-                    }
-                });
-            } catch (JSONException e) {
-                Log.e("", e.getMessage());
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject json) {
-            super.onPostExecute(json);
-
-            if (json != null) {
+            String statusJsonString = sharedPref.getString("cooker_status", "0");
+            if (statusJsonString != null) {
                 try {
-                    final String resultTime = getOffsetFromTime(getTimeFromJson(json.getString("date")));
+                    JSONObject json = new JSONObject(statusJsonString);
+                    String status = json.getString("status");
+                    if (!status.equals("cooking")) {
+                        isDone = true;
+                        setCookTime("N/A");
+                    }
 
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            setCookTime(resultTime);
-                        }
-                    });
                 } catch (JSONException e) {
                     Log.e("", e.getMessage());
-                } catch (ParseException e) {
-                    Log.e("", e.getMessage());
+                }
+            }
+
+            if (!isDone) {
+                String cookJsonString = sharedPref.getString("cook_time", "0");
+                if (cookJsonString != null) {
+                    try {
+                        JSONObject json = new JSONObject(cookJsonString);
+                        String resultTime = getOffsetFromTime(getTimeFromJson(json.getString("date")));
+                        setCookTime(resultTime);
+                    } catch (JSONException e) {
+                        Log.e("", e.getMessage());
+                    } catch (ParseException e) {
+                        Log.e("", e.getMessage());
+                    }
                 }
             }
         }

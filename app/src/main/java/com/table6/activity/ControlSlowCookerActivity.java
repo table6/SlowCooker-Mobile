@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.ArrayMap;
 import android.util.Log;
@@ -22,14 +21,13 @@ import com.table6.fragment.ControlTemperatureFragment;
 import com.table6.fragment.ControlTemperatureRadioFragment;
 import com.table6.fragment.LockableViewPager;
 import com.table6.object.ServerFeed;
+import com.table6.object.ServerFeedTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class ControlSlowCookerActivity extends AppCompatActivity {
