@@ -13,33 +13,33 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Cook Temperature"
+        android:text="Cook Temperature (Fahrenheit)"
         android:textSize="30dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <RadioGroup
-        android:id="@+id/controlTemperatureModeGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" >
+    <!--<RadioGroup-->
+        <!--android:id="@+id/controlTemperatureModeGroup"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:layout_marginTop="16dp"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/textView" >-->
 
-        <RadioButton
-            android:id="@+id/controlTemperatureModeFahrenheit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Fahrenheit" />
+        <!--<RadioButton-->
+            <!--android:id="@+id/controlTemperatureModeFahrenheit"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Fahrenheit" />-->
 
-        <RadioButton
-            android:id="@+id/controlTemperatureModeCelsius"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Celsius" />
+        <!--<RadioButton-->
+            <!--android:id="@+id/controlTemperatureModeCelsius"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Celsius" />-->
 
-    </RadioGroup>
+    <!--</RadioGroup>-->
 
     <Spinner
         android:id="@+id/controlTemperatureSpinner"
@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/controlTemperatureModeGroup" >
+        app:layout_constraintTop_toBottomOf="@+id/textView" >
 
     </Spinner>
 

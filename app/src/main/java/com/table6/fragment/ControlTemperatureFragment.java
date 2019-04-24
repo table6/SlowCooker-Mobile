@@ -19,11 +19,11 @@ import com.table6.activity.R;
 
 public class ControlTemperatureFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
-    private static final int MODE_FAHRENHEIT = 0;
-    private static final int MODE_CELSIUS = 1;
-
-    private RadioGroup controlTemperatureModeGroup;
-    private SparseIntArray buttonIdMap;
+//    private static final int MODE_FAHRENHEIT = 0;
+//    private static final int MODE_CELSIUS = 1;
+//
+//    private RadioGroup controlTemperatureModeGroup;
+//    private SparseIntArray buttonIdMap;
     private Spinner spinner;
     private ArrayAdapter<CharSequence> adapter;
     private int userSelection;
@@ -57,59 +57,59 @@ public class ControlTemperatureFragment extends Fragment implements AdapterView.
 
         userSelection = 0;
 
-        controlTemperatureModeGroup = (RadioGroup) view.findViewById(R.id.controlTemperatureModeGroup);
-
-        buttonIdMap = new SparseIntArray();
-
-        RadioButton temperatureModeFahrenheit = (RadioButton) view.findViewById(R.id.controlTemperatureModeFahrenheit);
-        buttonIdMap.append(temperatureModeFahrenheit.getId(), MODE_FAHRENHEIT);
-        temperatureModeFahrenheit.setChecked(true);
-
-        RadioButton temperatureModeCelsius = (RadioButton) view.findViewById(R.id.controlTemperatureModeCelsius);
-        buttonIdMap.append(temperatureModeCelsius.getId(), MODE_CELSIUS);
-
-        controlTemperatureModeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if(buttonIdMap.get(checkedId) == MODE_FAHRENHEIT) {
-                    adapter = ArrayAdapter.createFromResource(getContext(), R.array.fahrenheit_choices,
-                            android.R.layout.simple_spinner_item);
-
-                } else {
-                    adapter = ArrayAdapter.createFromResource(getContext(), R.array.celsius_choices,
-                            android.R.layout.simple_spinner_item);
-                }
-
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner.setAdapter(adapter);
-            }
-        });
+//        controlTemperatureModeGroup = (RadioGroup) view.findViewById(R.id.controlTemperatureModeGroup);
+//
+//        buttonIdMap = new SparseIntArray();
+//
+//        RadioButton temperatureModeFahrenheit = (RadioButton) view.findViewById(R.id.controlTemperatureModeFahrenheit);
+//        buttonIdMap.append(temperatureModeFahrenheit.getId(), MODE_FAHRENHEIT);
+//        temperatureModeFahrenheit.setChecked(true);
+//
+//        RadioButton temperatureModeCelsius = (RadioButton) view.findViewById(R.id.controlTemperatureModeCelsius);
+//        buttonIdMap.append(temperatureModeCelsius.getId(), MODE_CELSIUS);
+//
+//        controlTemperatureModeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(RadioGroup group, int checkedId) {
+//                if(buttonIdMap.get(checkedId) == MODE_FAHRENHEIT) {
+//                    adapter = ArrayAdapter.createFromResource(getContext(), R.array.fahrenheit_choices,
+//                            android.R.layout.simple_spinner_item);
+//
+//                } else {
+//                    adapter = ArrayAdapter.createFromResource(getContext(), R.array.celsius_choices,
+//                            android.R.layout.simple_spinner_item);
+//                }
+//
+//                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                spinner.setAdapter(adapter);
+//            }
+//        });
     }
 
-    public int getTemperatureMode() {
-        int buttonId = controlTemperatureModeGroup.getCheckedRadioButtonId();
-
-        return (buttonId != -1 ? buttonIdMap.get(buttonId) : -1);
-    }
+//    public int getTemperatureMode() {
+//        int buttonId = controlTemperatureModeGroup.getCheckedRadioButtonId();
+//
+//        return (buttonId != -1 ? buttonIdMap.get(buttonId) : -1);
+//    }
 
     public String getTemperatureModeString() {
-        String mode = "";
+        String mode = "F";
 
-        int buttonId = controlTemperatureModeGroup.getCheckedRadioButtonId();
-        if(buttonId != -1) {
-            int modeId = buttonIdMap.get(buttonId);
-
-            switch (modeId) {
-                case MODE_FAHRENHEIT:
-                    mode = "F";
-                    break;
-                case MODE_CELSIUS:
-                    mode = "C";
-                    break;
-                default:
-                    break;
-            }
-        }
+//        int buttonId = controlTemperatureModeGroup.getCheckedRadioButtonId();
+//        if(buttonId != -1) {
+//            int modeId = buttonIdMap.get(buttonId);
+//
+//            switch (modeId) {
+//                case MODE_FAHRENHEIT:
+//                    mode = "F";
+//                    break;
+//                case MODE_CELSIUS:
+//                    mode = "C";
+//                    break;
+//                default:
+//                    break;
+//            }
+//        }
 
         return mode;
     }
