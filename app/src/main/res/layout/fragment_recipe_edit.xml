@@ -8,77 +8,77 @@
     android:layout_marginBottom="8dp"
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
-    tools:context="com.table6.fragment.RecipeAddFragment">
+    tools:context="com.table6.fragment.RecipeEditFragment">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/titleInputLayout"
+            android:id="@+id/recipeEditTitleInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             app:layout_constraintTop_toTopOf="parent">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/titleTextInput"
+                android:id="@+id/recipeEditTitleTextInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Title" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/prepTimeInputLayout"
+            android:id="@+id/recipeEditPrepTimeInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/titleInputLayout">
+            app:layout_constraintTop_toBottomOf="@+id/recipeEditTitleInputLayout">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/prepTimeTextInput"
+                android:id="@+id/recipeEditPrepTimeTextInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Prep time" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/cookTimeInputLayout"
+            android:id="@+id/recipeEditCookTimeInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/prepTimeInputLayout">
+            app:layout_constraintTop_toBottomOf="@id/recipeEditPrepTimeInputLayout">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/cookTimeTextInput"
+                android:id="@+id/recipeEditCookTimeTextInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Cook time" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/servingSizeInputLayout"
+            android:id="@+id/recipeEditServingSizeInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/cookTimeInputLayout">
+            app:layout_constraintTop_toBottomOf="@id/recipeEditCookTimeInputLayout">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/servingSizeTextInput"
+                android:id="@+id/recipeEditServingSizeTextInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Serving size" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/directionsInputLayout"
+            android:id="@+id/recipeEditDirectionsInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/servingSizeInputLayout">
+            app:layout_constraintTop_toBottomOf="@id/recipeEditServingSizeInputLayout">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/directionsTextInput"
+                android:id="@+id/recipeEditDirectionsTextInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Directions" />
@@ -89,8 +89,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginLeft="5dp"
-            app:layout_constraintTop_toBottomOf="@id/directionsInputLayout">
+            android:layout_marginStart="5dp"
+            app:layout_constraintTop_toBottomOf="@id/recipeEditDirectionsInputLayout">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -99,7 +99,7 @@
                 android:textSize="18sp"/>
 
             <LinearLayout
-                android:id="@+id/ingredientsContainer"
+                android:id="@+id/recipeEditIngredientsContainer"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -110,13 +110,13 @@
                 android:layout_height="wrap_content">
 
                 <ImageButton
-                    android:id="@+id/addIngredientBtn"
+                    android:id="@+id/recipeEditAddIngredientBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_playlist_add_24px"/>
 
                 <android.support.design.widget.TextInputEditText
-                    android:id="@+id/ingredientsEditTxt"
+                    android:id="@+id/recipeEditIngredientsEditTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -125,12 +125,22 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/addNewRecipeBtn"
+            android:id="@+id/recipeEditCancelBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:text="Add"
+            android:text="Cancel"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/recipeEditConfirmBtn" />
+
+        <Button
+            android:id="@+id/recipeEditConfirmBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="OK"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 

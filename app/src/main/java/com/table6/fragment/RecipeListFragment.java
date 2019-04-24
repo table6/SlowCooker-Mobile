@@ -32,7 +32,6 @@ public class RecipeListFragment extends Fragment {
     public RecipeListFragment() {
     }
 
-    @SuppressWarnings("unused")
     public static RecipeListFragment newInstance(int columnCount) {
         RecipeListFragment fragment = new RecipeListFragment();
 
@@ -71,6 +70,7 @@ public class RecipeListFragment extends Fragment {
 
             recyclerView.setAdapter(new MyRecipeListRecyclerViewAdapter(RecipeContent.ITEMS, mListener));
         }
+
         return view;
     }
 
@@ -91,8 +91,6 @@ public class RecipeListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-
-        RecipeContent.setUserSavedRecipes(getActivity().getApplicationContext());
     }
 
     /**

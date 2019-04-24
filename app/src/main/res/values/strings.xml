@@ -8,4 +8,65 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_recipe_list_view">Recipes</string>
+    <string name="contact_email">gebhardt.6@wright.edu</string>
+
+    <!--https://stackoverflow.com/questions/9204303/android-is-it-possible-to-add-a-clickable-link-into-a-string-resource-->
+    <string name="github"><a href="https://github.com/jonathondgebhardt/The-Most-ve-er-st-Bestestery-Smartesteresteresteringer-Sloweringer-Cookery">The Most’ve’er’st Bestestery Smartesteresteresteringer Sloweringer Cookery</a></string>
+
+    <string name="mongo_db_version">v4.0.6</string>
+    <string name="flask_version">v1.0.2</string>
+
+    <string name="preference_file_key">slowcooker</string>
+    <string name="preference_file_measurement">temp_mode</string>
+    <string name="preference_file_type">type</string>
+
+    <string name="server_address">http://3.18.34.75:5000/</string>
+
+    <string-array name="server_directories">
+        <item>cooker_status</item>
+        <item>temperature</item>
+        <item>cook_time</item>
+        <item>lid_status</item>
+    </string-array>
+
+    <string-array name="fahrenheit_choices">
+        <item>140</item>
+        <item>145</item>
+        <item>150</item>
+        <item>155</item>
+        <item>160</item>
+        <item>165</item>
+        <item>170</item>
+        <item>175</item>
+        <item>180</item>
+    </string-array>
+
+    <string-array name="celsius_choices">
+        <item>60</item>
+        <item>65</item>
+        <item>70</item>
+        <item>75</item>
+        <item>80</item>
+    </string-array>
+
+    <string-array name="time_choices">
+        <item>04:00</item>
+        <item>04:30</item>
+        <item>05:00</item>
+        <item>05:30</item>
+        <item>06:00</item>
+        <item>06:30</item>
+        <item>07:00</item>
+        <item>07:30</item>
+        <item>08:00</item>
+        <item>08:30</item>
+        <item>09:00</item>
+        <item>09:30</item>
+        <item>10:00</item>
+        <item>10:30</item>
+        <item>11:00</item>
+        <item>11:30</item>
+        <item>12:00</item>
+    </string-array>
+
 </resources>

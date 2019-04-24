@@ -8,7 +8,6 @@
     android:padding="5dp">
 
     <TextView
-        android:id="@+id/label"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginStart="30dp"
@@ -21,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/time"
+        android:id="@+id/cookTimeFragmentCookTimeTextView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginTop="8dp"

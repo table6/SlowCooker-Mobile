@@ -2,6 +2,7 @@ package com.table6.object;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 import android.util.Xml;
 
 import com.table6.utility.RecipeXmlParser;
@@ -38,11 +39,11 @@ public class RecipeContent extends Application {
         try {
             parsedList = parser.parse(new FileInputStream(new File(context.getFilesDir(), recipeInputFileName)));
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Log.e("", e.getMessage());
         } catch (XmlPullParserException e) {
-            e.printStackTrace();
+            Log.e("", e.getMessage());
         } catch (IOException e ) {
-            e.printStackTrace();
+            Log.e("", e.getMessage());
         }
 
         if (parsedList != null) {
@@ -87,6 +88,16 @@ public class RecipeContent extends Application {
                 serializer.text(recipe.servingSize);
                 serializer.endTag(null, "servingSize");
 
+                serializer.startTag(null, "directions");
+                serializer.text(recipe.directions);
+                serializer.endTag(null, "directions");
+
+                serializer.startTag(null, "ingredients");
+                for(String ingredient : recipe.ingredients) {
+                    serializer.text(ingredient + ";");
+                }
+                serializer.endTag(null, "ingredients");
+
                 serializer.endTag(null, "entry");
             }
 
@@ -100,7 +111,7 @@ public class RecipeContent extends Application {
 
             outputStream.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("", e.getMessage());
         }
     }
 
@@ -109,17 +120,45 @@ public class RecipeContent extends Application {
         ITEM_MAP.put(item.title, item);
     }
 
+    public static boolean removeItem(String recipeTitle) {
+        if (ITEM_MAP.containsKey(recipeTitle)) {
+            removeItem(ITEM_MAP.get(recipeTitle));
+            return true;
+        }
+
+        return false;
+    }
+
+    private static void removeItem(Recipe recipe) {
+        ITEMS.remove(recipe);
+        ITEM_MAP.remove(recipe.title);
+    }
+
+    public static boolean editItem(RecipeContent.Recipe recipe) {
+        if (ITEM_MAP.containsKey(recipe.title)) {
+            removeItem(recipe);
+            addItem(recipe);
+            return true;
+        }
+
+        return false;
+    }
+
     public static class Recipe {
         public final String title;
         public final String prepTime;
         public final String cookTime;
         public final String servingSize;
+        public final String directions;
+        public final ArrayList<String> ingredients;
 
         public Recipe() {
             this.title = "Example Recipe";
             this.prepTime = "00:00";
             this.cookTime = "00:00";
             this.servingSize = "0";
+            this.directions = "Example directions...";
+            this.ingredients = new ArrayList<>();
         }
 
         public Recipe(String title, String prepTime, String cookTime, String servingSize) {
@@ -127,6 +166,27 @@ public class RecipeContent extends Application {
             this.prepTime = prepTime;
             this.cookTime = cookTime;
             this.servingSize = servingSize;
+            this.directions = "Example directions...";
+            this.ingredients = new ArrayList<>();
+        }
+
+        public Recipe(String title, String prepTime, String cookTime, String servingSize, String directions, ArrayList<String> ingredients) {
+            this.title = title;
+            this.prepTime = prepTime;
+            this.cookTime = cookTime;
+            this.servingSize = servingSize;
+            this.directions = directions;
+            this.ingredients = ingredients;
+        }
+
+        @Override
+        public String toString() {
+            String allIngredients = "";
+            for(String ingredient : this.ingredients) {
+                allIngredients += ", " + ingredient;
+            }
+
+            return this.title + "\n\t" + this.prepTime + ", " + this.cookTime + ", " + this.servingSize + "\n\t" + this.directions + "\n\t" + allIngredients;
         }
 
         @Override
