@@ -12,13 +12,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ControlSlowCookerActivity" />
-        <activity android:name=".RecipeListActivity" />
-        <activity android:name="com.table6.view.HelpView" />
+        <activity
+            android:name=".ControlSlowCookerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".RecipeListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.table6.view.HelpView"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main_drawer"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
