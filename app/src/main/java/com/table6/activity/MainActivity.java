@@ -2,6 +2,7 @@ package com.table6.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -13,10 +14,24 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.table6.fragment.CookerStatsFragment;
+import com.table6.object.ServerFeedTask;
 import com.table6.view.HelpView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private final Handler handler = new Handler();
+    private String[] directories;
+    private ServerFeedTask serverFeedTask;
+
+    // https://stackoverflow.com/questions/6400846/updating-time-and-date-by-the-second-in-android
+    private final Runnable runnable = new Runnable() {
+        public void run() {
+            // Update every 5 seconds.
+            handler.postDelayed(runnable, 5 * 1000);
+            serverFeedTask.getFeed();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +51,10 @@ public class MainActivity extends AppCompatActivity
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        directories = getResources().getStringArray(R.array.server_directories);
+        serverFeedTask = new ServerFeedTask(getApplicationContext(), directories);
+        handler.post(runnable);
 
         CookerStatsFragment fragment = CookerStatsFragment.newInstance();
         fragmentTransaction.add(R.id.mainActivityContainer, fragment);

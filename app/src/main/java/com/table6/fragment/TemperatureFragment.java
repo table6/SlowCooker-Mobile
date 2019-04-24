@@ -89,92 +89,53 @@ public class TemperatureFragment extends ServerFeedFragment {
         try {
             this.tempTxt.setText(String.format(Locale.US, "%.1f", Double.parseDouble(x)));
         } catch (NumberFormatException e) {
-            this.tempTxt.setText(x);
+            this.tempTxt.setText(x.toUpperCase());
         }
     }
 
     @Override
     protected void update() {
-        if(this.tempTxt != null && this.modeTxt != null) {
-            new RetrieveFeedTask().execute();
-        }
-    }
+        if (this.tempTxt != null && this.modeTxt != null) {
+            // https://stackoverflow.com/questions/5918328/is-it-ok-to-save-a-json-array-in-sharedpreferences
+            boolean isDone = false;
 
-    // https://www.tutorialspoint.com/android/android_json_parser.htm
-    public class RetrieveFeedTask extends AsyncTask<Void, Void, JSONObject> {
-        @Override
-        protected JSONObject doInBackground(Void... voids) {
+            SharedPreferences sharedPref = getContext().getSharedPreferences("", Context.MODE_PRIVATE);
 
-            try {
-                HttpURLConnection connection = (HttpURLConnection) new URL(getString(R.string.server_address) + "temperature").openConnection();
-                connection.connect();
-
-                int responseCode = connection.getResponseCode();
-                connection.disconnect();
-
-                StringBuilder sb = new StringBuilder();
-                if (responseCode == HttpsURLConnection.HTTP_OK) {
-                    String line;
-                    BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-                    while ((line = br.readLine()) != null) {
-                        sb.append(line);
-                    }
-
-                    return new JSONObject(sb.toString());
-                }
-            } catch (MalformedURLException e) {
-                Log.e("", e.getMessage());
-            } catch (IOException e) {
-                Log.e("", e.getMessage());
-
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getActivity().getApplicationContext(),
-                                "Could not contact server",
-                                Toast.LENGTH_LONG).show();
-                    }
-                });
-            } catch (JSONException e) {
-                Log.e("", e.getMessage());
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject json) {
-            super.onPostExecute(json);
-
-            if (json != null) {
+            String statusJsonString = sharedPref.getString("cooker_status", "0");
+            if (statusJsonString != null) {
                 try {
-                    final String type = json.getString("type");
+                    JSONObject json = new JSONObject(statusJsonString);
+                    String status = json.getString("status");
+                    if (!status.equals("cooking")) {
+                        isDone = true;
+                        setTemperature("N/A");
+                        setMode(MODE_NONE);
+                    }
 
-                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString(getString(R.string.preference_file_type), type);
-                    editor.apply();
-
-                    final String temperature = json.getString("temperature");
-                    final String measurement = json.getString("measurement");
-
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!type.equals("probe")) {
-                                // Don't show C or F
-                                setMode(MODE_NONE);
-
-                            } else {
-                                setMode((measurement.equals("F") ? MODE_FAHRENHEIT : MODE_CELSIUS));
-                            }
-
-                            setTemperature(temperature);
-                        }
-                    });
                 } catch (JSONException e) {
                     Log.e("", e.getMessage());
+                }
+            }
+
+            if(!isDone) {
+                String strJson = sharedPref.getString("temperature", "0");
+                if (strJson != null) {
+                    try {
+                        JSONObject json = new JSONObject(strJson);
+
+                        String type = json.getString("type");
+                        if (!type.equals("probe")) {
+                            setMode(MODE_NONE);
+                        } else {
+                            setMode(MODE_FAHRENHEIT);
+                        }
+
+                        String temperature = json.getString("temperature");
+                        setTemperature(temperature);
+
+                    } catch (JSONException e) {
+                        Log.e("", e.getMessage());
+                    }
                 }
             }
         }

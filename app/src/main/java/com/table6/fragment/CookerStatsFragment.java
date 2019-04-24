@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -22,15 +21,11 @@ import com.table6.activity.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import javax.net.ssl.HttpsURLConnection;
 
 public class CookerStatsFragment extends ServerFeedFragment {
 
@@ -66,7 +61,6 @@ public class CookerStatsFragment extends ServerFeedFragment {
         transaction.commit();
 
         ToggleButton secureLidToggleBtn = (ToggleButton) view.findViewById(R.id.cookerStatsSecureLidToggleBtn);
-        new RetrieveFeedTask().execute();
 
         secureLidToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -95,7 +89,19 @@ public class CookerStatsFragment extends ServerFeedFragment {
 
     @Override
     protected void update() {
-        new RetrieveFeedTask().execute();
+        SharedPreferences sharedPref = getContext().getSharedPreferences("", Context.MODE_PRIVATE);
+        String strJson = sharedPref.getString("lid_status", "0");
+
+        if (strJson != null) {
+            try {
+                JSONObject json = new JSONObject(strJson);
+                String status = json.getString("status");
+                ToggleButton secureLidToggleBtn = (ToggleButton) getView().findViewById(R.id.cookerStatsSecureLidToggleBtn);
+                secureLidToggleBtn.setChecked(status.equals("secure"));
+            } catch (JSONException e) {
+                Log.e("", e.getMessage());
+            }
+        }
     }
 
     // https://www.tutorialspoint.com/android/android_json_parser.htm
@@ -153,67 +159,4 @@ public class CookerStatsFragment extends ServerFeedFragment {
         }
     }
 
-    public class RetrieveFeedTask extends AsyncTask<Void, Void, JSONObject> {
-        @Override
-        protected JSONObject doInBackground(Void... voids) {
-
-            try {
-                HttpURLConnection connection = (HttpURLConnection) new URL(getString(R.string.server_address) + "lid_status").openConnection();
-                connection.connect();
-
-                int responseCode = connection.getResponseCode();
-                connection.disconnect();
-
-                StringBuilder sb = new StringBuilder();
-                if (responseCode == HttpsURLConnection.HTTP_OK) {
-                    String line;
-                    BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-                    while ((line = br.readLine()) != null) {
-                        sb.append(line);
-                    }
-
-                    return new JSONObject(sb.toString());
-                }
-            } catch (MalformedURLException e) {
-                Log.e("", e.getMessage());
-            } catch (IOException e) {
-                Log.e("", e.getMessage());
-
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getActivity().getApplicationContext(),
-                                "Could not contact server",
-                                Toast.LENGTH_LONG).show();
-                    }
-                });
-            } catch (JSONException e) {
-                Log.e("", e.getMessage());
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject json) {
-            super.onPostExecute(json);
-
-            if (json != null) {
-                try {
-                    final String status = json.getString("status");
-
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            ToggleButton secureLidToggleBtn = (ToggleButton) getView().findViewById(R.id.cookerStatsSecureLidToggleBtn);
-                            secureLidToggleBtn.setChecked(status.equals("secure"));
-                        }
-                    });
-                } catch (JSONException e) {
-                    Log.e("", e.getMessage());
-                }
-            }
-        }
-    }
 }

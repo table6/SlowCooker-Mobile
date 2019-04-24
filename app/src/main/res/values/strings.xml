@@ -22,6 +22,13 @@
 
     <string name="server_address">http://3.18.34.75:5000/</string>
 
+    <string-array name="server_directories">
+        <item>cooker_status</item>
+        <item>temperature</item>
+        <item>cook_time</item>
+        <item>lid_status</item>
+    </string-array>
+
     <string-array name="fahrenheit_choices">
         <item>140</item>
         <item>145</item>
