@@ -89,7 +89,7 @@ public class TemperatureFragment extends ServerFeedFragment {
         try {
             this.tempTxt.setText(String.format(Locale.US, "%.1f", Double.parseDouble(x)));
         } catch (NumberFormatException e) {
-            this.tempTxt.setText(x);
+            this.tempTxt.setText(x.toUpperCase());
         }
     }
 
