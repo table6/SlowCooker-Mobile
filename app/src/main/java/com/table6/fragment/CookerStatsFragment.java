@@ -12,7 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -60,48 +62,50 @@ public class CookerStatsFragment extends ServerFeedFragment {
 
         transaction.commit();
 
-        ToggleButton secureLidToggleBtn = (ToggleButton) view.findViewById(R.id.cookerStatsSecureLidToggleBtn);
-
-        secureLidToggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    // The toggle is enabled. Attempt to secure lid.
-                    JSONObject json = new JSONObject();
-                    try {
-                        json.put("status", "secure");
-                        new PushFeedTask().execute(json);
-                    } catch (JSONException e) {
-                        Log.e("", e.getMessage());
-                    }
-                } else {
-                    // The toggle is disabled. Attempt to unsecure lid.
-                    JSONObject json = new JSONObject();
-                    try {
-                        json.put("status", "unsecure");
-                        new PushFeedTask().execute(json);
-                    } catch (JSONException e) {
-                        Log.e("", e.getMessage());
-                    }
-                }
-            }
-        });
+//        Button secureBtn = (Button) view.findViewById(R.id.cookerStatsSecureBtn);
+//        secureBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                JSONObject json = new JSONObject();
+//                try {
+//                    json.put("status", "secure");
+//                    new PushFeedTask().execute(json);
+//                } catch (JSONException e) {
+//                    Log.e("", e.getMessage());
+//                }
+//            }
+//        });
+//
+//        Button unsecureBtn = (Button) view.findViewById(R.id.cookerStatsUnsecureBtn);
+//        unsecureBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                JSONObject json = new JSONObject();
+//                try {
+//                    json.put("status", "unsecure");
+//                    new PushFeedTask().execute(json);
+//                } catch (JSONException e) {
+//                    Log.e("", e.getMessage());
+//                }
+//            }
+//        });
     }
 
     @Override
     protected void update() {
-        SharedPreferences sharedPref = getContext().getSharedPreferences("", Context.MODE_PRIVATE);
-        String strJson = sharedPref.getString("lid_status", "0");
-
-        if (strJson != null) {
-            try {
-                JSONObject json = new JSONObject(strJson);
-                String status = json.getString("status");
-                ToggleButton secureLidToggleBtn = (ToggleButton) getView().findViewById(R.id.cookerStatsSecureLidToggleBtn);
-                secureLidToggleBtn.setChecked(status.equals("secure"));
-            } catch (JSONException e) {
-                Log.e("", e.getMessage());
-            }
-        }
+//        SharedPreferences sharedPref = getContext().getSharedPreferences("", Context.MODE_PRIVATE);
+//        String strJson = sharedPref.getString("lid_status", "0");
+//
+//        if (strJson != null) {
+//            try {
+//                JSONObject json = new JSONObject(strJson);
+//                String status = json.getString("status");
+//                TextView lidStatus = (TextView) getView().findViewById(R.id.cookerStatsLidStatusTextView);
+//                lidStatus.setText(status.toUpperCase());
+//            } catch (JSONException e) {
+//                Log.e("", e.getMessage());
+//            }
+//        }
     }
 
     // https://www.tutorialspoint.com/android/android_json_parser.htm
